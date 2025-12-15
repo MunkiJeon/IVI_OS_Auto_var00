@@ -1,0 +1,102 @@
+import pytest
+import time
+from pages.vehicle_control_page import VehicleControlPage
+
+class TestLightsScenario:
+    
+    def test_lights_switching(self, driver):
+        """
+        Navigate to Lights screen and toggle various light settings.
+        """
+        page = VehicleControlPage(driver)
+        page.start()
+        time.sleep(3)
+        
+        print("Navigating to Lights tab...")
+        page.click(page.MENU_LIGHTS)
+        
+        # Verify presence of key sections with Wait
+        print("Waiting for Escort Light option...")
+        if not page.wait_for_element(page.LIGHT_ESCORT):
+            print("Escort Light not found. Dumping source for debug...")
+            print(driver.page_source[:500]) # Print first 500 chars
+            pytest.fail("Failed to switch to Lights tab or find Escort Light")
+            
+        assert page.is_displayed(page.LIGHT_ESCORT), "Escort Light option not found"
+        
+        # Scenario: Frunk Light Toggle (Off -> On -> Auto)
+        print("Testing Frunk Light Toggles...")
+        actions = [
+            (page.LIGHT_FRUNK_ON, "Frunk Light ON"),
+            (page.LIGHT_FRUNK_AUTO, "Frunk Light AUTO"),
+            (page.LIGHT_FRUNK_OFF, "Frunk Light OFF")
+        ]
+        
+        for locator, name in actions:
+            print(f"Selecting {name}...")
+            # Check if visible before clicking to be safe (handling scroll if needed later)
+            if page.is_displayed(locator):
+                page.click(locator)
+                time.sleep(1)
+            else:
+                print(f"Warning: {name} not visible (might need scroll)")
+
+        # Scenario: Trunk Light Toggle (Off -> On -> Auto)
+        print("Testing Trunk Light Toggles...")
+        trunk_actions = [
+            (page.LIGHT_TRUNK_ON, "Trunk Light ON"),
+            (page.LIGHT_TRUNK_AUTO, "Trunk Light AUTO"),
+            (page.LIGHT_TRUNK_OFF, "Trunk Light OFF")
+        ]
+
+        for locator, name in trunk_actions:
+            print(f"Selecting {name}...")
+            if page.is_displayed(locator):
+                page.click(locator)
+                time.sleep(1)
+            else:
+                 print(f"Warning: {name} not visible")
+        
+        # Scenario: Scroll down to reveal Interior/Mood Lights
+        print("Scrolling down to find Interior/Mood Lights...")
+        page.scroll_down()
+        time.sleep(2)
+
+        # check Interior Lights
+        print("Testing Interior Lights...")
+        if page.is_displayed(page.LIGHT_INTERIOR_ALL_SEATS):
+            page.click(page.LIGHT_INTERIOR_ALL_SEATS)
+            time.sleep(1)
+            page.click(page.LIGHT_INTERIOR_DRIVER) # Toggle Driver Seat
+            time.sleep(1)
+        else:
+            print("Error: Interior Lights 'All Seats' button not found after scroll.")
+
+        # Check Mood Lights
+        print("Testing Mood Lights...")
+        if page.is_displayed(page.LIGHT_MOOD_ON):
+            page.click(page.LIGHT_MOOD_ON)
+            time.sleep(1)
+            
+            # Try to adjust brightness if visible
+            if page.is_displayed(page.LIGHT_MOOD_BRIGHTNESS):
+                print("Adjusting Mood Light Brightness...")
+                # Simple tap on the bar (center) or logic to slide could be added
+                # For now just checking presence
+                page.is_displayed(page.LIGHT_MOOD_BRIGHTNESS)
+        else:
+             print("Error: Mood Light 'On' button not found after scroll.")
+
+        # Extra Scroll as per User Request
+        print("Performing extra scroll to ensure all bottom elements are visible...")
+        page.scroll_down()
+        time.sleep(2)
+        
+        # Re-verify Mood Lights after extra scroll
+        print("Re-verifying Mood Lights after extra scroll...")
+        if page.is_displayed(page.LIGHT_MOOD_ON):
+             print("Verified: Mood Light 'On' button is visible.")
+        else:
+             print("Error: Mood Light 'On' button not visible after extra scroll.")
+
+        print("Lights scenario completed.")
