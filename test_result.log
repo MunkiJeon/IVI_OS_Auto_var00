@@ -1,0 +1,109 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\USER\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\USER\Desktop\Python_mk07\IVI_OS_Auto_var00
+plugins: anyio-4.12.0, testrail-2.9.0
+collecting ... collected 1 item
+
+tests/test_quick_settings_full.py::test_quick_settings_full Starting Quick Settings Full Test...
+Navigating to Quick Settings...
+FAILED
+
+================================== FAILURES ===================================
+__________________________ test_quick_settings_full ___________________________
+
+driver = <appium.webdriver.webdriver.WebDriver (session="8f9d5c83-48b0-4f29-857d-e608762ce029")>
+
+    def test_quick_settings_full(driver):
+        """
+        Combined test for Quick Settings: Icons visibility and Actions (Click/Toggle).
+        Verifies all accessible elements in the Quick Settings panel.
+        """
+        vehicle_page = VehicleControlPage(driver)
+    
+        print("Starting Quick Settings Full Test...")
+        vehicle_page.start()
+        time.sleep(3) # Wait for app load
+    
+        # 1. Navigate to Quick Settings
+        print("Navigating to Quick Settings...")
+>       vehicle_page.click(vehicle_page.MENU_QUICK_SETTINGS)
+
+tests\test_quick_settings_full.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pages\base_page.py:21: in click
+    element = self.find_element(locator)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+pages\base_page.py:18: in find_element
+    return self.wait.until(EC.presence_of_element_located(locator))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="8f9d5c83-48b0-4f29-857d-e608762ce029")>
+method = <function presence_of_element_located.<locals>._predicate at 0x00000131A0C85640>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        -----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       NoSuchElementError: An element could not be located on the page using the given search parameters.
+E           at AndroidUiautomator2Driver.findElOrEls (C:\Users\USER\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\lib\commands\find.ts:86:11)
+E           at processTicksAndRejections (node:internal/process/task_queues:105:5)
+E           at AndroidUiautomator2Driver.findElOrElsWithProcessing (C:\Users\USER\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:60:12)
+E           at AndroidUiautomator2Driver.findElement (C:\Users\USER\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:75:12)
+
+..\..\..\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\selenium\webdriver\support\wait.py:138: TimeoutException
+=========================== short test summary info ===========================
+FAILED tests/test_quick_settings_full.py::test_quick_settings_full - selenium...
+============================= 1 failed in 19.97s ==============================

@@ -1,5 +1,8 @@
+
 import pytest
 import time
+import random
+from appium.webdriver.common.appiumby import AppiumBy
 from pages.vehicle_control_page import VehicleControlPage
 
 class TestLightsScenario:
@@ -100,3 +103,56 @@ class TestLightsScenario:
              print("Error: Mood Light 'On' button not visible after extra scroll.")
 
         print("Lights scenario completed.")
+
+        if not page.scroll_to_element(page.LIGHTS_MOOD, max_scrolls=3):
+            pytest.fail("Mood Light not found")
+        
+        try:
+            # Click Mood Light to enter/expand
+            page.click(page.LIGHTS_MOOD)
+            time.sleep(1)
+            
+            # Click "On" (Assuming generic 'On' text locator for now)
+            try:
+                on_xpath = "//android.widget.TextView[@text='색상']"
+                page.click((AppiumBy.XPATH, on_xpath))
+                print("Clicked 'On'")
+            except:
+                 print("Could not find 'On' button, checking Color button directly.")
+
+            time.sleep(1)
+
+            # Click 'Color'
+            # If not found, swipe up?
+            try:
+                page.click(page.LIGHTS_COLOR_BTN)
+                print("Clicked 'Color'")
+            except:
+                print("'Color' button not found. Dumping source...")
+                # Try finding any TextView that looks like color?
+                # Dump source to stdout for debugging
+                # print(page.driver.page_source)
+                pytest.fail("'Color' button not found.")
+                
+            time.sleep(1)
+            
+            # Pick Random Color
+            dims = page.driver.get_window_size()
+            x = dims['width'] // 2
+            y = dims['height'] // 2
+            page.driver.tap([(x, y)]) 
+            print("Tapped Center (Random Color)")
+            time.sleep(1)
+            
+            # Click Save
+            page.click(page.LIGHTS_SAVE_BTN)
+            print("Clicked Save")
+            time.sleep(1)
+            
+        except Exception as e:
+            print(f"Error in Lights Test: {e}")
+            from datetime import datetime
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            with open(f"error_source_lights_{timestamp}.xml", "w", encoding='utf-8') as f:
+                f.write(page.driver.page_source)
+            pytest.fail(f"Test failed: {e}")

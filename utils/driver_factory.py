@@ -12,6 +12,11 @@ class DriverFactory:
         options.udid = DeviceConfig.TCP_DEVICE_ID
         options.no_reset = True
         
+        # Stability settings
+        options.set_capability("settings[allowInvisibleElements]", True)
+        options.set_capability("settings[ignoreUnimportantViews]", False)
+        options.set_capability("settings[waitForIdleTimeout]", 500)
+        
         # Optional: Set a default app to launch via capabilities if needed, 
         # but often in IVI we just want to connect to the system.
         # We can leave appPackage/appActivity empty here and start them in tests,

@@ -17,3 +17,9 @@ def driver():
     # Teardown
     if driver_instance:
         driver_instance.quit()
+
+from pages.vehicle_control_page import VehicleControlPage
+
+@pytest.fixture(scope="function")
+def page(driver):
+    return VehicleControlPage(driver)
