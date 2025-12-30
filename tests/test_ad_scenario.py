@@ -3,44 +3,45 @@ import pytest
 import time
 import random
 from appium.webdriver.common.appiumby import AppiumBy
+from pages.vehicle_control_page import VehicleControlPage
 
 class TestADScenario:
-    def test_ad_speed_offset(self, page):
+    def test_ad_speed_offset(self, driver):
         print("\n[Test] AD: Speed Offset Adjustment")
+        page = VehicleControlPage(driver)
+        page.start()
+        time.sleep(1)
+        
         page.reset_sidebar()
         page.click_sidebar_menu("AD")
         time.sleep(1)
         
+        page.click(page.AD_SPEED_CURRENT)
+        time.sleep(1)
+     
         # Click Auto (Speed Limit)
         page.click(page.AD_SPEED_AUTO)
         time.sleep(1)
         
         # Change Speed Offset (-5 to 5)
-        # We need to click Minus or Plus buttons.
-        # We'll use the approximate locators we defined: preceding/following sibling of '10km/h'
-        # Or if that fails, use bounds derived from XML analysis.
-        
         target_offset = random.randint(-5, 5)
         print(f"Target Offset clicks: {target_offset}")
         
-        # Locate the Value Text to use as anchor
-        try:
-             # Try to find the "10km/h" element or similar
-             anchor = page.find_element(page.AD_SPEED_VALUE_10)
-        except:
-             # Fallback: search for any "km/h"
-             anchor = page.driver.find_element(AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'km/h')]")
-
-        # Define button locations relative to anchor or use the defined Locators
-        # Let's try using the Page Object locators first
-        
+        # Determine strict direction and count
+        x, y = 0, 0
         if target_offset < 0:
+            print("Decreasing speed offset...")
             for _ in range(abs(target_offset)):
-                page.click(page.AD_SPEED_MINUS)
+                # Use page defined locator for Minus
+                x, y = page.AD_IconBtn["AD_SPEED_MINUS"]
+                driver.tap([(x*1920, y*1080)])
                 time.sleep(0.5)
         elif target_offset > 0:
-             for _ in range(target_offset):
-                page.click(page.AD_SPEED_PLUS)
+            print("Increasing speed offset...")
+            for _ in range(target_offset):
+                # Use page defined locator for Plus
+                x, y = page.AD_IconBtn["AD_SPEED_PLUS"]
+                driver.tap([(x*1920, y*1080)])
                 time.sleep(0.5)
         
         print(f"Adjusted speed by {target_offset}")

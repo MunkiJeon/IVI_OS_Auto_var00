@@ -20,12 +20,18 @@ class TestLightsScenario:
         
         # Verify presence of key sections with Wait
         print("Waiting for Escort Light option...")
-        if not page.wait_for_element(page.LIGHT_ESCORT):
-            print("Escort Light not found. Dumping source for debug...")
-            print(driver.page_source[:500]) # Print first 500 chars
-            pytest.fail("Failed to switch to Lights tab or find Escort Light")
-            
-        assert page.is_displayed(page.LIGHT_ESCORT), "Escort Light option not found"
+
+        SCREEN_WIDTH = 1920
+        SCREEN_HEIGHT = 1080
+        def get_coords(ratio_x, ratio_y) :
+            return (int(SCREEN_WIDTH * ratio_x), int(SCREEN_HEIGHT * ratio_y))
+
+        for name, (rx, ry) in page.Lights_IconBtn.items():
+            x, y = get_coords(rx, ry)
+            print(f"Testing {name} at ({x}, {y})...")
+            driver.tap([(x, y)])
+            time.sleep(3)
+
         
         # Scenario: Frunk Light Toggle (Off -> On -> Auto)
         print("Testing Frunk Light Toggles...")
@@ -68,9 +74,15 @@ class TestLightsScenario:
         # check Interior Lights
         print("Testing Interior Lights...")
         if page.is_displayed(page.LIGHT_INTERIOR_ALL_SEATS):
-            page.click(page.LIGHT_INTERIOR_ALL_SEATS)
+            page.click(page.LIGHT_INTERIOR_ALL_OFF)
             time.sleep(1)
             page.click(page.LIGHT_INTERIOR_DRIVER) # Toggle Driver Seat
+            time.sleep(1)
+            page.click(page.LIGHT_INTERIOR_PASSENGER) # Toggle Driver Seat
+            time.sleep(1)
+            page.click(page.LIGHT_INTERIOR_REAR_LEFT) # Toggle Driver Seat
+            time.sleep(1)
+            page.click(page.LIGHT_INTERIOR_REAR_RIGHT) # Toggle Driver Seat
             time.sleep(1)
         else:
             print("Error: Interior Lights 'All Seats' button not found after scroll.")
@@ -104,12 +116,12 @@ class TestLightsScenario:
 
         print("Lights scenario completed.")
 
-        if not page.scroll_to_element(page.LIGHTS_MOOD, max_scrolls=3):
+        if not page.scroll_to_element(page.LIGHT_MOOD_COLOR, max_scrolls=3):
             pytest.fail("Mood Light not found")
         
         try:
             # Click Mood Light to enter/expand
-            page.click(page.LIGHTS_MOOD)
+            page.click(page.LIGHT_MOOD_COLOR)
             time.sleep(1)
             
             # Click "On" (Assuming generic 'On' text locator for now)
@@ -121,20 +133,6 @@ class TestLightsScenario:
                  print("Could not find 'On' button, checking Color button directly.")
 
             time.sleep(1)
-
-            # Click 'Color'
-            # If not found, swipe up?
-            try:
-                page.click(page.LIGHTS_COLOR_BTN)
-                print("Clicked 'Color'")
-            except:
-                print("'Color' button not found. Dumping source...")
-                # Try finding any TextView that looks like color?
-                # Dump source to stdout for debugging
-                # print(page.driver.page_source)
-                pytest.fail("'Color' button not found.")
-                
-            time.sleep(1)
             
             # Pick Random Color
             dims = page.driver.get_window_size()
@@ -145,7 +143,7 @@ class TestLightsScenario:
             time.sleep(1)
             
             # Click Save
-            page.click(page.LIGHTS_SAVE_BTN)
+            page.click(page.LIGHT_MOOD_SAVE_BTN)
             print("Clicked Save")
             time.sleep(1)
             

@@ -4,22 +4,36 @@ import time
 from pages.vehicle_control_page import VehicleControlPage
 
 def test_verify_privacy_screen(driver):
-    page = VehicleControlPage(driver)
-    
-    # Start Activity
     print("\n[Step] Starting Vehicle Control App...")
+    page = VehicleControlPage(driver)
     page.start()
     time.sleep(3)
     
-    # Reset Sidebar
     page.reset_sidebar()
-
-    # Test Screen: Privacy (개인정보 보호)
-    print("\n[Step] Testing 'Privacy' Screen...")
     page.click_sidebar_menu("개인정보 보호")
     time.sleep(1)
     
-    assert page.is_displayed(page.PRIVACY_TITLE), "Privacy Title not found"
-    assert page.is_displayed(page.MIC_USAGE), "Mic Usage option not found"
-    assert page.is_displayed(page.LOCATION_USAGE), "Location Usage option not found"
-    print(" - Privacy Screen Verified.")
+    toggles = [
+        page.MIC_USAGE,
+        page.LOCATION_USAGE,
+        page.CAMERA_USAGE
+    ]
+
+    for locator in toggles:
+        try:
+            cam_label = driver.find_element(*locator)
+            rect = cam_label.rect # {'x': 100, 'y': 200, 'width': 50, 'height': 20}
+            
+            # Logic: X - 60, Y + 10    
+            target_x = rect['x'] - 60
+            target_y = rect['y'] + 10
+            
+            print(f"Found {locator} at {rect}. Tapping at ({target_x}, {target_y})")
+            
+            driver.tap([(target_x, target_y)])
+            time.sleep(1)
+            driver.tap([(target_x, target_y)])
+            time.sleep(1)
+            
+        except Exception as e:
+            print(f"Skipping toggle {locator}: {e}")

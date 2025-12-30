@@ -18,7 +18,7 @@ class VehicleControlPage(BasePage):
     MENU_CHARGING = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전']")
     MENU_NAVIGATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='내비게이션']")
     MENU_GLEO_AI = (AppiumBy.XPATH, "//android.widget.TextView[@text='Gleo AI']")
-    # MENU_SCREEN = (AppiumBy.XPATH, "//android.widget.TextView[@text='화면']") # Not found on device
+    MENU_SCREEN = (AppiumBy.XPATH, "//android.widget.TextView[@text='화면']")
     MENU_SOUND = (AppiumBy.XPATH, "//android.widget.TextView[@text='사운드']")
     MENU_PROFILE = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필']")
     MENU_CONVENIENCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='편의 기능']")
@@ -30,6 +30,191 @@ class VehicleControlPage(BasePage):
     MENU_GENERAL = (AppiumBy.XPATH, "//android.widget.TextView[@text='일반 설정']")
     MENU_VEHICLE_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 정보']")
     
+    # Quick Settings (빠른 설정) - Right Panel Elements
+    Quick_Settings_IconBtn ={
+        "사이드 미러 개폐":(0.880, 0.232), # Text Center Y=690 -> 0.639
+        "충전 포트":(0.948,0.232), 
+        "프렁크":(0.784,0.327),    
+        "라이트 끄기":(0.565, 0.441),  # Row Center Y=476 -> 0.441
+        "라이트 자동":(0.616, 0.441),
+        "라이트 미등":(0.667, 0.441),
+        "라이트 전조등":(0.717, 0.441),
+        "라이트 자동 전조등":(0.783,0.441), 
+        "전방 와이퍼 1단":(0.578, 0.540), # Row Center Y=583 -> 0.540
+        "전방 와이퍼 2단":(0.662, 0.540),
+        "전방 와이퍼 자동":(0.725, 0.540),
+        "전방 와이퍼 워셔액":(0.781,0.540), 
+        "후방 와이퍼 1단":(0.578, 0.639), # Row Center Y=690 -> 0.639
+        "후방 와이퍼 2단":(0.662, 0.639),
+        "후방 와이퍼 자동":(0.725, 0.639),
+        "후방 와이퍼 워셔액":(0.781,0.639), 
+    }
+
+    QS_ALL_WINDOWS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 창문']")
+    QS_WINDOW_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='창문 잠금']")
+    
+    QS_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크']")
+    QS_CHILD_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='차일드락']")
+    
+    QS_DOOR_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='도어 잠금']")
+    #사이드 미러 개폐
+    #충전 포트
+    #밝기 조절?
+    #프렁크
+    QS_SUNBLIND_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='선블라인드']")
+    #라이트 끄기
+    #라이트 자동
+    #라이트 미등
+    #라이트 전조등
+    #라이트 자동 전조등
+    QS_GLOVE_BOX = (AppiumBy.XPATH, "//android.widget.TextView[@text='글로브박스']")
+    #전방 와이퍼 1단
+    #전방 와이퍼 2단
+    #전방 와이퍼 자동
+    #전방 와이퍼 워셔액
+    QS_STEERING_WHEEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전대']")
+    #후방 와이퍼 1단
+    #후방 와이퍼 2단
+    #후방 와이퍼 자동
+    #후방 와이퍼 워셔액
+    QS_SIDE_MIRROR = (AppiumBy.XPATH, "//android.widget.TextView[@text='사이드 미러']")    
+    # Common 'Auto' buttons - we will fetch all and distinguish by order/position
+    QS_AUTO_LABEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
+
+    # Lights (라이트) - Right Panel Elements
+    Lights_IconBtn = {
+        "전조등 끄기":(0.583, 0.259),
+        "전조등 자동":(0.666, 0.259),
+        "전조등 미등":(0.750, 0.259),
+        "전조등 켜짐":(0.833, 0.259),
+        "자동 상향 전조등":(0.619, 0.338),
+        "에스코트 조명":(0.554, 0.425), 
+    }
+    # Headlights (전조등) - 
+    LIGHT_HEADLIGHT_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
+    LIGHT_HEADLIGHT_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
+    
+    # Frunk Lights (프렁크등) - Off/On/Auto
+    # LIGHT_FRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
+    # LIGHT_FRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='켜기']")
+    # LIGHT_FRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
+
+    LIGHT_FRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기'][1]")
+    LIGHT_FRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='켜기'][1]")
+    LIGHT_FRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동'][1]")
+
+    # Trunk Lights (트렁크등)
+    LIGHT_TRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='끄기'][2]")
+    LIGHT_TRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='켜기'][2]")
+    LIGHT_TRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='자동'][2]")
+
+    # Interior Lights (실내등)
+    # Header: //android.widget.TextView[@text='실내등']
+    LIGHT_INTERIOR_ALL_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
+    LIGHT_INTERIOR_ALL_SEATS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 좌석']")
+    LIGHT_INTERIOR_DRIVER = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석']")
+    LIGHT_INTERIOR_PASSENGER = (AppiumBy.XPATH, "//android.widget.TextView[@text='동승석']")
+    LIGHT_INTERIOR_REAR_LEFT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 좌측']")
+    LIGHT_INTERIOR_REAR_RIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 우측']")
+
+    # Mood Lights (무드 조명)
+    LIGHT_MOOD_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='끄기']")
+    LIGHT_MOOD_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='켜기']")
+    LIGHT_MOOD_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='자동']")
+    LIGHT_MOOD_COLOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='색상']")
+    LIGHT_MOOD_BRIGHTNESS = (AppiumBy.CLASS_NAME, "android.widget.SeekBar")
+    LIGHT_MOOD_SAVE_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
+
+
+    # AD (주행지원) - Right Panel
+    AD_MODE_PRO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로']")
+    AD_MODE_MAX = (AppiumBy.XPATH, "//android.widget.TextView[@text='맥스']")
+    AD_SPEED_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 (제한 속도)']")
+    AD_SPEED_CURRENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 속도']")
+    AD_LANE_CHANGE_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
+    AD_LANE_CHANGE_CONFIRM = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전자 확인']")
+
+    # Coordinates/Bounds based on XML: Minus ~[1100, 600], Plus ~[1500, 600] for 10km/h row
+    # Using generic XPaths for views if possible or text relative
+    # AD_SPEED_VALUE = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'km/h')]")
+    AD_IconBtn = {
+        "AD_SPEED_MINUS":(0.573, 0.555),
+        "AD_SPEED_PLUS":(0.781, 0.555),
+    }
+
+    # Driving (주행) - Right Panel 
+    Driving_IconBtn = {
+        "DRIVING_SNOW_RAIN_ASSIST":(0.541, 0.375),
+        "DRIVING_ESC":(0.541, 0.587),
+        "DRIVING_AUTO_HOLD":(0.549, 0.495),
+        "DRIVING_BLIND_SPOT_CAMERA":(0.572, 0.555),
+        "DRIVING_PARKING_BRAKE":(0.572, 0.555),
+    }
+    DRIVING_ACCEL_MODE_GENTLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='부드럽게']")
+    DRIVING_ACCEL_MODE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
+    DRIVING_ACCEL_MODE_FAST = (AppiumBy.XPATH, "//android.widget.TextView[@text='빠르게']")
+    DRIVING_SNOW_RAIN_ASSIST = (AppiumBy.XPATH, "//android.widget.TextView[@text='눈/빗길 보조']")
+    DRIVING_STEERING_MODE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
+    DRIVING_STEERING_MODE_LIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='가볍게']")
+    DRIVING_CREEP = (AppiumBy.XPATH, "//android.widget.TextView[@text='크립 모드']")
+    DRIVING_ONE_PADAL_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='원페달 모드']")
+    DRIVING_FORWARD_COLLISION_WARNING = (AppiumBy.XPATH, "//android.widget.TextView[@text='전방 충돌 경고']")
+    DRIVING_FORWARD_COLLISION_WARNING_DELAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='늦게']")
+    DRIVING_FORWARD_COLLISION_WARNING_NOMAL = (AppiumBy.XPATH, "//android.widget.TextView[@text='보통']")
+    DRIVING_FORWARD_COLLISION_WARNING_EARLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='일찍']")
+    DRIVING_LANE_DEPARTURE_WARNING = (AppiumBy.XPATH, "//android.widget.TextView[@text='차선 이탈 경고']")
+    DRIVING_LANE_DEPARTURE_WARNING_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
+    DRIVING_LANE_DEPARTURE_WARNING_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고만']")
+    DRIVING_LANE_DEPARTURE_WARNING_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고와 제어']")
+    DRIVING_BLIND_SPOT_COLLISION_WARNING = (AppiumBy.XPATH, "//android.widget.TextView[@text='사각지대 충돌 경고']")
+    DRIVING_BLIND_SPOT_COLLISION_WARNING_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
+    DRIVING_BLIND_SPOT_COLLISION_WARNING_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고만']")
+    DRIVING_BLIND_SPOT_COLLISION_WARNING_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고와 제어']")
+    DRIVING_BLIND_SPOT_CAMERA_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='사각지대 카메라']")
+    DRIVING_EPB_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='전자식 파킹 브레이크 수동 조작']")
+    DRIVING_EPB_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='파킹 브레이크']")
+
+    # Lock (잠금) - Right Panel    
+    LOCK_UNLOCK_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='모두']")
+    LOCK_DRIVER_ONLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석만']")
+
+    # Seat (시트 포지션) - Right Panel
+    SEAT_IconBtn = {
+        "COMFORTABLE_RIDE":(0.554, 0.222),
+    }
+
+    # Seat Selection Touch Points (Relative Coordinates x, y)
+    SEAT_TOUCH_POINTS = {
+        "운전석": (0.677, 0.685),       # Front Left (Driver) 1290 730
+        "이동식 콘솔": (0.677, 0.592),  # Center Console 1290 630
+        "동승석": (0.677, 0.555),       # Front Right (Passenger) 1290 580
+        "뒷좌석 좌측": (0.799, 0.685),  # Rear Left 1570 730
+        "뒷좌석 우측": (0.799, 0.555),  # Rear Right 1290 590
+    }
+
+    SEAT_MEMORY_1 = (AppiumBy.XPATH, "//android.widget.TextView[@text='1']")
+    SEAT_MEMORY_2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='2']")
+    # SEAT_DRIVER locator might change depending on selection, so we rely on finding text dynamically
+    SEAT_POSITION_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
+    SEAT_POSITION_RESTORE = (AppiumBy.XPATH, "//android.widget.TextView[@text='복원']")
+    SEAT_POSITION_CLOSE = (AppiumBy.XPATH, "//android.widget.TextView[@text='접기']")
+    SEAT_POSITION_OPEN = (AppiumBy.XPATH, "//android.widget.TextView[@text='펼치기']")
+    SEAT_SIDE_MIRROR_ANGLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='사이드미러 각도']")
+    SEAT_HANDLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전대']")
+    SEAT_HANDLE_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
+    SEAT_HANDLE_RESTORE = (AppiumBy.XPATH, "//android.widget.TextView[@text='복원']")
+    
+    # Climate (공조) - Right Panel
+    CLIMATE_AUTO_RECIRC = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']")
+    CLIMATE_WASHER = (AppiumBy.XPATH, "//android.widget.TextView[@text='워셔액 분사']")
+    CLIMATE_TUNNEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='터널 진입']")
+    CLIMATE_AIR_QUALITY = (AppiumBy.XPATH, "//android.widget.TextView[@text='공기 질 저하']")
+    CLIMATE_OVERHEAT = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내 과열 방지']")
+    CLIMATE_AUTO_DRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='에어컨 자동 건조']")
+
+
+
+
     # Sound Tab Elements
     SOUND_VOLUME = (AppiumBy.XPATH, "//android.widget.TextView[@text='음량']")
     SOUND_QUIET_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='조용한 모드']")
@@ -100,30 +285,70 @@ class VehicleControlPage(BasePage):
     RECENT_HISTORY = (AppiumBy.XPATH, "//android.widget.TextView[@text='최근 결제 내역']")
     PAYMENT_DISPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='결제 표시']")
 
-    # General Settings Screen Locators
-    GENERAL_SETTINGS_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='일반 설정']")
+    # General (일반 설정) - Font Setting
     FONT_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='글꼴']")
     FONT_DROPDOWN = (AppiumBy.XPATH, "//android.widget.TextView[@text='글꼴']/following-sibling::android.view.View")
+    FONT_SETTING_BASIC = (AppiumBy.XPATH, "//android.widget.TextView[@text='기본']")
+    FONT_SETTING_HYUNDAI = (AppiumBy.XPATH, "//android.widget.TextView[@text='현대']")
+    FONT_SETTING_KIA = (AppiumBy.XPATH, "//android.widget.TextView[@text='기아']")
+    FONT_SETTING_GENESIS = (AppiumBy.XPATH, "//android.widget.TextView[@text='제네시스']")
+    FONT_SETTING_APPLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='적용']")
+    
+    # General (일반 설정) - Language Setting
     LANGUAGE_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='언어']")
     LANGUAGE_DROPDOWN = (AppiumBy.XPATH, "//android.widget.TextView[@text='언어']/following-sibling::android.view.View")
+    LANGUAGE_SETTING_KO = (AppiumBy.XPATH, "//android.widget.TextView[@text='한국어']")
+    LANGUAGE_SETTING_EN = (AppiumBy.XPATH, "//android.widget.TextView[@text='English']")
+    LANGUAGE_SETTING_ZH = (AppiumBy.XPATH, "//android.widget.TextView[@text='中文']")
+    LANGUAGE_SETTING_JP = (AppiumBy.XPATH, "//android.widget.TextView[@text='日本語']")
+    LANGUAGE_SETTING_DE = (AppiumBy.XPATH, "//android.widget.TextView[@text='Deutsch']")
+    LANGUAGE_SETTING_FR = (AppiumBy.XPATH, "//android.widget.TextView[@text='Français']")
+    LANGUAGE_SETTING_ES = (AppiumBy.XPATH, "//android.widget.TextView[@text='Español']")
+    
+    # General (일반 설정) - Time Setting
+    AUTO_TIME_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 시간 설정']")
+    DATE_TIME_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간 설정']")
+    MANUAL_TIME_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='설정']")
+    MANUAL_TIME_TYPE_12 = (AppiumBy.XPATH, "//android.widget.TextView[@text='12시간']")
+    MANUAL_TIME_TYPE_24 = (AppiumBy.XPATH, "//android.widget.TextView[@text='24시간']")
+
+    # Date & Time
+    AUTO_TIME_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 시간 설정']")
+    AUTO_TIME_TOGGLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 시간 설정']/preceding-sibling::android.view.View")
+
+    DATE_TIME_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간 설정']")    # "Settings" button to the right. 
+    DATE_TIME_SET_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간 설정']/following-sibling::android.widget.TextView[@text='설정']")
+    
+    TIME_FORMAT_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='시간 형식']")
+    
+    # Popups (Date/Time)
+    POPUP_TITLE_DATE_TIME = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간 설정']")
+    POPUP_CONFIRM = (AppiumBy.XPATH, "//android.widget.TextView[@text='확인']")
+    POPUP_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
+    
     DATE_TIME = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간']")
+    
+    # General (일반 설정) - Display Setting
+    SUB_SPEED_DISPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='보조속도 표시']")
+    DISTANCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='거리']")
+    DISTANCE_KM = (AppiumBy.XPATH, "//android.widget.TextView[@text='km']")
+    DISTANCE_MILE = (AppiumBy.XPATH, "//android.widget.TextView[@text='mile']")
+    TEMPERATURE = (AppiumBy.XPATH, "//android.widget.TextView[@text='온도']")
+    TEMPERATURE_C = (AppiumBy.XPATH, "//android.widget.TextView[@text='℃']")
+    TEMPERATURE_F = (AppiumBy.XPATH, "//android.widget.TextView[@text='℉']")
+    CONSUMPTION = (AppiumBy.XPATH, "//android.widget.TextView[@text='연비']")
+    CONSUMPTION_L_100KM = (AppiumBy.XPATH, "//android.widget.TextView[@text='km/kWh']")
+    CONSUMPTION_MILEAGE = (AppiumBy.XPATH, "//android.widget.TextView[@text='kWh/100km']")
+    TIRE_PRESSURE = (AppiumBy.XPATH, "//android.widget.TextView[@text='타이어 공기압']")
+    TIRE_PRESSURE_PSI = (AppiumBy.XPATH, "//android.widget.TextView[@text='psi']")
+    TIRE_PRESSURE_KPA = (AppiumBy.XPATH, "//android.widget.TextView[@text='kpa']")
+    TIRE_PRESSURE_BAR = (AppiumBy.XPATH, "//android.widget.TextView[@text='bar']")
+    
 
-    # Vehicle Info Screen Locators
-    VEHICLE_INFO_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 정보']")
-    CONNECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Connect']")
-    SOFTWARE_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='소프트웨어 정보']")
-    AUTO_UPDATE = (AppiumBy.XPATH, "//android.widget.TextView[@text='업데이트 자동 다운로드']")
-    VIN = (AppiumBy.XPATH, "//android.widget.TextView[@text='차대 번호']")
-    FACTORY_RESET = (AppiumBy.XPATH, "//android.widget.TextView[@text='공장 초기화']")
-    INITIALIZE_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@text='초기화']")
 
-    # AD Mode Settings (Right pannel)
-    AD_MODE_PRO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로']")    # --- NEW SCREEN LOCATORS ---
-    MENU_NAVIGATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='내비게이션']")
-    MENU_GLEO_AI = (AppiumBy.XPATH, "//android.widget.TextView[@text='Gleo AI']")
-    # MENU_SCREEN = (AppiumBy.XPATH, "//android.widget.TextView[@text='화면']")
-    MENU_SOUND = (AppiumBy.XPATH, "//android.widget.TextView[@text='사운드']")
-    MENU_PROFILE = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필']")
+    
+
+
 
     # Navigation Screen
     NAV_CHARGING_STATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전소']")
@@ -137,18 +362,18 @@ class VehicleControlPage(BasePage):
     GLEO_STYLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='대화 스타일']")
     GLEO_START = (AppiumBy.XPATH, "//android.widget.TextView[@text='바로 대화 시작']")
 
-    # Sound Screen Locators (Content)
-    SOUND_VOLUME = (AppiumBy.XPATH, "//android.widget.TextView[@text='음량']")
-    SOUND_SYSTEM = (AppiumBy.XPATH, "//android.widget.TextView[@text='시스템']")
-    SOUND_MEDIA = (AppiumBy.XPATH, "//android.widget.TextView[@text='미디어']")
-    SOUND_NAV_GUIDANCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='내비게이션']")
 
-    # Profile Screen Locators
-    PROFILE_SETTINGS = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필 설정']")
-    PROFILE_DRIVER = (AppiumBy.XPATH, "//android.widget.EditText[@text='운전자']") # It's an EditText
-    PROFILE_ADD = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필 추가']")
-    PROFILE_KEY = (AppiumBy.XPATH, "//android.widget.TextView[@text='키 관리']")
-    AD_MODE_MAX = (AppiumBy.XPATH, "//android.widget.TextView[@text='맥스']")
+    # Vehicle Info (차량 정보) - Right side
+    VEHICLE_INFO_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 정보']")
+    CONNECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Connect']")
+    SOFTWARE_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='소프트웨어 정보']")
+    AUTO_UPDATE = (AppiumBy.XPATH, "//android.widget.TextView[@text='업데이트 자동 다운로드']")
+    VIN = (AppiumBy.XPATH, "//android.widget.TextView[@text='차대 번호']")
+    FACTORY_RESET = (AppiumBy.XPATH, "//android.widget.TextView[@text='공장 초기화']")
+    INITIALIZE_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@text='초기화']")
+    LEGAL_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='법적 정보']")
+    LEGAL_INFO_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@text='보기']")
+    
     
     def start(self):
         """Starts the Vehicle Control Activity"""
@@ -167,281 +392,18 @@ class VehicleControlPage(BasePage):
         # Check if the Title element is displayed
         return self.is_displayed(self.TITLE)
 
-    # Quick Settings (빠른 설정) - Right Panel Elements
-    # Inferred from User Image and XML
-    Quick_Settings_IconBtn ={
-        "사이드 미러 개폐":(0.880, 0.232), # Text Center Y=690 -> 0.639
-        "충전 포트":(0.948,0.232), 
-        "프렁크":(0.784,0.327),    
-        "라이트 끄기":(0.565, 0.441),  # Row Center Y=476 -> 0.441
-        "라이트 자동":(0.616, 0.441),
-        "라이트 미등":(0.667, 0.441),
-        "라이트 전조등":(0.717, 0.441),
-        "라이트 자동 전조등":(0.783,0.441), 
-        "전방 와이퍼 1단":(0.578, 0.540), # Row Center Y=583 -> 0.540
-        "전방 와이퍼 2단":(0.662, 0.540),
-        "전방 와이퍼 자동":(0.725, 0.540),
-        "전방 와이퍼 워셔액":(0.781,0.540), 
-        "후방 와이퍼 1단":(0.578, 0.639), # Row Center Y=690 -> 0.639
-        "후방 와이퍼 2단":(0.662, 0.639),
-        "후방 와이퍼 자동":(0.725, 0.639),
-        "후방 와이퍼 워셔액":(0.781,0.639), 
-    }
-
-    QS_ALL_WINDOWS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 창문']")
-    QS_WINDOW_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='창문 잠금']")
-    QS_DOOR_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='도어 잠금']")
-    QS_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크']")
-    QS_CHILD_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='차일드락']")
-    QS_GLOVE_BOX = (AppiumBy.XPATH, "//android.widget.TextView[@text='글로브박스']")
-    QS_STEERING_WHEEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전대']")
-    QS_SIDE_MIRROR = (AppiumBy.XPATH, "//android.widget.TextView[@text='사이드 미러']")
     
-    # New Locators for Red Box Items
-    QS_SUNBLIND_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='선블라인드']")
-    # Common 'Auto' buttons - we will fetch all and distinguish by order/position
-    QS_AUTO_LABEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
     
     # Lights Row (Approx Y=420-500)
     # Using specific hierarchy or bounds is brittle, but index 0 in that container is unique?
     # Let's verify presence of the RadioButton group for Lights.
     # We can assume the row below Sunblind / "AD" is Lights.
     
-    # AD Screen
-    AD_MODE_PRO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로']")
-    AD_MODE_MAX = (AppiumBy.XPATH, "//android.widget.TextView[@text='맥스']")
-    AD_SPEED_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 (제한 속도)']")
-    AD_SPEED_CURRENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 속도']")
-    AD_LANE_CHANGE_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
-    AD_LANE_CHANGE_CONFIRM = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전자 확인']")
-
-    # Driving Screen
-    # Top
-    DRIVING_ACCEL_MODE_GENTLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='부드럽게']")
-    DRIVING_ACCEL_MODE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
-    DRIVING_ACCEL_MODE_FAST = (AppiumBy.XPATH, "//android.widget.TextView[@text='빠르게']")
-    DRIVING_SNOW_RAIN_ASSIST = (AppiumBy.XPATH, "//android.widget.TextView[@text='눈/빗길 보조']")
-    DRIVING_STEERING_MODE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
-    DRIVING_STEERING_MODE_LIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='가볍게']")
-    DRIVING_ESC = (AppiumBy.XPATH, "//android.widget.TextView[@text='ESC 활성화']")
     
-    # Mid
-    DRIVING_ONE_PEDAL = (AppiumBy.XPATH, "//android.widget.TextView[@text='원페달 모드']")
-    DRIVING_CREEP = (AppiumBy.XPATH, "//android.widget.TextView[@text='크립 모드']")
-    DRIVING_AUTO_HOLD = (AppiumBy.XPATH, "//android.widget.TextView[@text='정차 후 브레이크 자동 유지(Auto Hold)']")
-    DRIVING_REGEN_BRAKE_STRONG = (AppiumBy.XPATH, "//android.widget.TextView[@text='강하게']")
-    DRIVING_REGEN_BRAKE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
-    DRIVING_REGEN_BRAKE_WEAK = (AppiumBy.XPATH, "//android.widget.TextView[@text='약하게']")
 
-    # Bot
-    DRIVING_COLLISION_WARNING_LATE = (AppiumBy.XPATH, "//android.widget.TextView[@text='늦게']")
-    DRIVING_COLLISION_WARNING_NORMAL = (AppiumBy.XPATH, "//android.widget.TextView[@text='보통']")
-    DRIVING_COLLISION_WARNING_EARLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='일찍']")
+
     
-    DRIVING_LANE_SAFETY_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
-    DRIVING_LANE_SAFETY_WARNING = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고만']")
-    DRIVING_LANE_SAFETY_CONTROL = (AppiumBy.XPATH, "//android.widget.TextView[@text='경고와 제어']")
-    
-    DRIVING_BLIND_SPOT_CAMERA = (AppiumBy.XPATH, "//android.widget.TextView[@text='사각지대 카메라']")
 
-    # Lights Tab Elements
-    LIGHTS_AMBIENT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '무드 조명')]")
-    LIGHTS_OUTDOOR = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '실외 조명')]")
-    LIGHTS_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '트렁크등')]")
-    LIGHTS_FRUNK = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '프렁크등')]")
-    LIGHTS_ESCORT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '에스코트')]")
-    LIGHTS_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
-    LIGHTS_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
-    LIGHTS_COLOR_BTN = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '색상')]") 
-    LIGHTS_SAVE_BTN = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '저장')]")
-
-    # AD Tab Elements
-    AD_PRO_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로']")
-    AD_SPEED_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 (제한 속도)']")
-    # Coordinates/Bounds based on XML: Minus ~[1100, 600], Plus ~[1500, 600] for 10km/h row
-    # Using generic XPaths for views if possible or text relative
-    # AD_SPEED_VALUE = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'km/h')]")
-    AD_SPEED_MINUS = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'km/h')]/preceding-sibling::android.view.View[1]") # Rough guess
-    AD_SPEED_PLUS = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'km/h')]/following-sibling::android.view.View[1]") # Rough guess
-    
-    # Actually, let's use the bounds from XML to be safe or text "10km/h" and siblings
-    AD_SPEED_VALUE_10 = (AppiumBy.XPATH, "//android.widget.TextView[@text='10km/h']")
-    
-    # Driving Tab Elements
-    DRIVING_ACCEL_GENTLE = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '부드럽게')]")
-    DRIVING_SNOW_ASSIST = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '눈/빗길 보조')]")
-    DRIVING_ESC = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'ESC 활성화')]")
-    # Creep and Auto Hold might need scrolling
-    DRIVING_CREEP = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '크립 모드')]")
-    DRIVING_AUTO_HOLD = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '정차 후 브레이크 자동 유지')]")
-    
-    # Lock Tab Elements
-    LOCK_UNLOCK_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='모두 잠금 해제']")
-
-    # Seat Tab Elements
-    SEAT_DRIVER = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석']")
-    SEAT_MEMORY_1 = (AppiumBy.XPATH, "//android.widget.TextView[@text='1']")
-    SEAT_MEMORY_2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='2']")
-    SEAT_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
-    SEAT_REST_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='휴식 모드']")
-
-    # Climate Tab Elements
-    CLIMATE_AUTO_RECIRC = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']")
-    CLIMATE_WASHER = (AppiumBy.XPATH, "//android.widget.TextView[@text='워셔액 분사']")
-    CLIMATE_TUNNEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='터널 진입']")
-    CLIMATE_AIR_QUALITY = (AppiumBy.XPATH, "//android.widget.TextView[@text='공기 질 저하']")
-    CLIMATE_OVERHEAT = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내 과열 방지']")
-    CLIMATE_AUTO_DRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='에어컨 자동 건조']")
-
-    # Charging Tab ElementsED_CURRENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 속도']")
-    AD_LANE_CHANGE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차선 변경']")
-    AD_SPEED_LIMIT_OFFSET = (AppiumBy.XPATH, "//android.widget.TextView[@contains(@text, 'km/h')]")
-
-    # Driving Tab Elements
-    DRIVING_ACCEL_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='가속 모드']")
-    DRIVING_PEDAL_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='가속 페달 모드']")
-    DRIVING_ONE_PEDAL = (AppiumBy.XPATH, "//android.widget.TextView[@text='원페달 모드']")
-    DRIVING_CREEP = (AppiumBy.XPATH, "//android.widget.TextView[@text='크립 모드']")
-    DRIVING_FCA = (AppiumBy.XPATH, "//android.widget.TextView[@text='전방 충돌 경고']")
-    DRIVING_LKA = (AppiumBy.XPATH, "//android.widget.TextView[@text='차선 이탈 경고']")
-    DRIVING_BCA = (AppiumBy.XPATH, "//android.widget.TextView[@text='사각지대 충돌 경고']")
-    DRIVING_BVM = (AppiumBy.XPATH, "//android.widget.TextView[@text='사각지대 카메라']")
-    
-    # Lock Tab Elements
-    LOCK_UNLOCK_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='모두']")
-    LOCK_DRIVER_ONLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석만']")
-    LOCK_CHILD_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='차일드락']")
-    LOCK_WALK_AWAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='하차 후 잠금']")
-    LOCK_AUTO_OPEN_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크 열림 높이']")
-    LOCK_SOUND = (AppiumBy.XPATH, "//android.widget.TextView[@text='잠금 알림음']")
-    # Lights Screen
-    # Lights (라이트) Mode Settings
-    # Headlights (전조등) - Off/Auto
-    LIGHTS_HEADLIGHT_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/following-sibling::*//android.widget.TextView[@text='끄기']") # Example xpath logic needed
-    # Better strategy: Using text directly if unique, or composition
-    # The XML structure for Headlights:
-    # TextView "전조등" -> View Group -> View (text="끄기"), View (text="자동"), ...
-    
-    # Specific Locators based on XML analysis
-    LIGHT_HEADLIGHT_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
-    LIGHT_HEADLIGHT_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
-
-    # Escort Lights
-    LIGHT_ESCORT = (AppiumBy.XPATH, "//android.widget.TextView[@text='에스코트 조명']")
-    
-    # Frunk Lights (프렁크등) - Off/On/Auto
-    LIGHT_FRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
-    LIGHT_FRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='켜기']")
-    LIGHT_FRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프렁크등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
-
-    # Trunk Lights (트렁크등)
-    LIGHT_TRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
-    LIGHT_TRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='켜기']")
-    LIGHT_TRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
-
-    # Interior Lights (실내등)
-    # Header: //android.widget.TextView[@text='실내등']
-    LIGHT_INTERIOR_ALL_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내등']/parent::*/following-sibling::*//android.widget.TextView[@text='끄기']")
-    LIGHT_INTERIOR_ALL_SEATS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 좌석']")
-    LIGHT_INTERIOR_DRIVER = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석']")
-    LIGHT_INTERIOR_PASSENGER = (AppiumBy.XPATH, "//android.widget.TextView[@text='동승석']")
-    LIGHT_INTERIOR_REAR_LEFT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 좌측']")
-    LIGHT_INTERIOR_REAR_RIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 우측']")
-
-    # Mood Lights (무드 조명)
-    LIGHT_MOOD_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='끄기']")
-    LIGHT_MOOD_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='켜기']")
-    LIGHT_MOOD_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='자동']")
-    LIGHT_MOOD_BRIGHTNESS = (AppiumBy.CLASS_NAME, "android.widget.SeekBar")
-
-    # Lock Screen Locators
-    LOCK_CHILD_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='차일드락']")
-    LOCK_UNLOCK_DOOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='도어 잠금 해제']")
-    LOCK_CLOSE_ON_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='잠금 시 닫기']")
-    LOCK_LOCK_ON_EXIT = (AppiumBy.XPATH, "//android.widget.TextView[@text='하차 후 잠금']")
-    LOCK_AUTO_OPEN_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 열림']")
-    LOCK_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크']")
-
-    # Seat Position Screen Locators
-    SEAT_TITLE_DRIVER = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석']")
-    SEAT_TITLE_PASSENGER = (AppiumBy.XPATH, "//android.widget.TextView[@text='동승석']")
-    SEAT_TITLE_REAR_LEFT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 좌측']")
-    SEAT_TITLE_REAR_RIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 우측']")
-    SEAT_BUTTON_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
-    SEAT_BUTTON_RESTORE = (AppiumBy.XPATH, "//android.widget.TextView[@text='복원']")
-    SEAT_BUTTON_REST_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='휴식 모드']")
-
-    # Climate Screen Locators
-    CLIMATE_AUTO_RECIRCULATE = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']")
-    CLIMATE_WASHER_FLUID = (AppiumBy.XPATH, "//android.widget.TextView[@text='워셔액 분사']")
-    CLIMATE_TUNNEL_ENTRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='터널 진입']")
-    CLIMATE_AIR_QUALITY = (AppiumBy.XPATH, "//android.widget.TextView[@text='공기 질 저하']")
-    CLIMATE_OVERHEAT_PROTECTION = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내 과열 방지']")
-    CLIMATE_AUTO_DRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='에어컨 자동 건조']")
-
-    # Charging Screen Locators
-    CHARGING_START = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 시작']")
-    CHARGING_UNLOCK_CONNECTOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='커넥터 잠금 해제']")
-    CHARGING_BATTERY_LEVEL_DISPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 잔량 표시']")
-    CHARGING_SLOW_CHARGING = (AppiumBy.XPATH, "//android.widget.TextView[@text='완속 충전']")
-
-    # Connection Tab Elements (Connectivity & Utility Modes)
-    CONNECTION_WIFI = (AppiumBy.XPATH, "//android.widget.TextView[@text='Wi-Fi']")
-    CONNECTION_BLUETOOTH = (AppiumBy.XPATH, "//android.widget.TextView[@text='블루투스']")
-    CONNECTION_MOBILE_DATA = (AppiumBy.XPATH, "//android.widget.TextView[@text='모바일 데이터']")
-    CONNECTION_HOTSPOT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Wi-Fi 핫스팟']")
-    CONNECTION_ANDROID_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='Android Auto']")
-    CONNECTION_CARPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='Apple Carplay']")
-    
-    # Seat Tab Elements
-    SEAT_EASY_ACCESS = (AppiumBy.XPATH, "//android.widget.TextView[@text='편안한 탑승']")
-    SEAT_RELAX_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='휴식 모드']")
-    SEAT_POSITION_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
-    SEAT_POSITION_RESTORE = (AppiumBy.XPATH, "//android.widget.TextView[@text='복원']")
-    # SEAT_SMART_POSTURE = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '스마트 자세')]")
-
-    # Climate Tab Elements
-    CLIMATE_AUTO_DRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='에어컨 자동 건조']")
-    CLIMATE_AIR_CLEANING = (AppiumBy.XPATH, "//android.widget.TextView[@text='공기 질 저하']")
-    CLIMATE_TUNNEL_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='터널 진입']")
-    CLIMATE_AUTO_RECIRCULATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']")
-    CLIMATE_WASHER_FLUID = (AppiumBy.XPATH, "//android.widget.TextView[@text='워셔액 분사']")
-    CLIMATE_OVERHEAT_PROTECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내 과열 방지']")
-    
-    # Charging Tab Elements
-    CHARGING_START = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 시작']")
-    CHARGING_CONNECTOR_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='커넥터 잠금 설정']") # General header or specific
-    CHARGING_CONNECTOR_UNLOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='커넥터 잠금 해제']")
-    CHARGING_SLOW_CHARGING = (AppiumBy.XPATH, "//android.widget.TextView[@text='완속 충전']")
-    
-    # Convenience Tab Elements
-    CONVENIENCE_CAMPING = (AppiumBy.XPATH, "//android.widget.TextView[@text='캠핑 모드']")
-    CONVENIENCE_PET_CARE = (AppiumBy.XPATH, "//android.widget.TextView[@text='펫 케어 모드']")
-    CONVENIENCE_VALET = (AppiumBy.XPATH, "//android.widget.TextView[@text='발레 모드']")
-    CONVENIENCE_CAR_WASH = (AppiumBy.XPATH, "//android.widget.TextView[@text='세차 모드']")
-    CONVENIENCE_TOWING = (AppiumBy.XPATH, "//android.widget.TextView[@text='견인 모드']")
-    
-    # Security Tab Elements
-    SECURITY_SENTRY_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='상시 녹화']") # Sentry/Always record
-    SECURITY_EVENT_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='이벤트 녹화']")
-    SECURITY_DRIVING_RECORD = (AppiumBy.XPATH, "//android.widget.TextView[@text='주행 중']")
-    SECURITY_PARKING_RECORD = (AppiumBy.XPATH, "//android.widget.TextView[@text='주차 중']")
-    
-    # Privacy Tab Elements
-    PRIVACY_MIC_ACCESS = (AppiumBy.XPATH, "//android.widget.TextView[@text='마이크 사용']")
-    PRIVACY_CAMERA_ACCESS = (AppiumBy.XPATH, "//android.widget.TextView[@text='실내 카메라 사용']")
-    PRIVACY_LOCATION_ACCESS = (AppiumBy.XPATH, "//android.widget.TextView[@text='위치 정보 사용']")
-    
-    # Hipass Tab Elements
-    HIPASS_PAYMENT_DISPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='결제 표시']")
-    HIPASS_VOICE_GUIDE = (AppiumBy.XPATH, "//android.widget.TextView[@text='음성 안내']")
-    HIPASS_BALANCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='잔액']")
-    
-    # General Tab Elements
-    GENERAL_DATE_TIME = (AppiumBy.XPATH, "//android.widget.TextView[@text='날짜 및 시간']")
-    GENERAL_LANGUAGE = (AppiumBy.XPATH, "//android.widget.TextView[@text='언어']")
-    GENERAL_UNIT = (AppiumBy.XPATH, "//android.widget.TextView[@text='단위']")
-    GENERAL_RESET = (AppiumBy.XPATH, "//android.widget.TextView[@text='초기화']")
     GENERAL_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='단말기 정보']")
     
     # Vehicle Info Tab Elements

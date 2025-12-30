@@ -7,15 +7,15 @@ def test_quick_settings_full(driver):
     Combined test for Quick Settings: Icons visibility and Actions (Click/Toggle).
     Verifies all accessible elements in the Quick Settings panel.
     """
-    vehicle_page = VehicleControlPage(driver)
+    page = VehicleControlPage(driver)
     
     print("Starting Quick Settings Full Test...")
-    vehicle_page.start()
+    page.start()
     time.sleep(3) # Wait for app load
     
     # 1. Navigate to Quick Settings
     print("Navigating to Quick Settings...")
-    vehicle_page.click(vehicle_page.MENU_QUICK_SETTINGS)
+    page.click(page.MENU_QUICK_SETTINGS)
     time.sleep(2)
     
     # 2. Define all items to test
@@ -23,14 +23,14 @@ def test_quick_settings_full(driver):
     # IsAction=True implies we might expect a toggle or state change, currently just click verify.
     
     items_to_test = [
-        (vehicle_page.QS_SIDE_MIRROR, "Side Mirror"),
-        (vehicle_page.QS_ALL_WINDOWS, "All Windows"),
-        (vehicle_page.QS_WINDOW_LOCK, "Window Lock"), # Also in actions
-        (vehicle_page.QS_DOOR_LOCK, "Door Lock"),     # Also in actions
-        (vehicle_page.QS_TRUNK, "Trunk"),
-        (vehicle_page.QS_CHILD_LOCK, "Child Lock"),   # Also in actions
-        (vehicle_page.QS_GLOVE_BOX, "Glove Box"),
-        (vehicle_page.QS_STEERING_WHEEL, "Steering Wheel")
+        (page.QS_SIDE_MIRROR, "Side Mirror"),
+        (page.QS_ALL_WINDOWS, "All Windows"),
+        (page.QS_WINDOW_LOCK, "Window Lock"), # Also in actions
+        (page.QS_DOOR_LOCK, "Door Lock"),     # Also in actions
+        (page.QS_TRUNK, "Trunk"),
+        (page.QS_CHILD_LOCK, "Child Lock"),   # Also in actions
+        (page.QS_GLOVE_BOX, "Glove Box"),
+        (page.QS_STEERING_WHEEL, "Steering Wheel")
     ]
     
     # 3. Iterate and Test
@@ -39,7 +39,7 @@ def test_quick_settings_full(driver):
     def get_coords(ratio_x, ratio_y) :
         return (int(SCREEN_WIDTH * ratio_x), int(SCREEN_HEIGHT * ratio_y))
 
-    for name, (rx, ry) in vehicle_page.Quick_Settings_IconBtn.items():
+    for name, (rx, ry) in page.Quick_Settings_IconBtn.items():
         x, y = get_coords(rx, ry)
         print(f"Testing {name} at ({x}, {y})...")
         driver.tap([(x, y)])
@@ -50,18 +50,18 @@ def test_quick_settings_full(driver):
             print(f"Testing {name}...")
             
             # Visibility Check (with Scroll if needed)
-            if not vehicle_page.is_displayed(locator):
+            if not page.is_displayed(locator):
                 print(f"{name} not immediately visible. Attempting scroll...")
-                vehicle_page.scroll_down()
+                page.scroll_down()
                 time.sleep(1)
             
-            element_present = vehicle_page.wait_for_element(locator)
-            if vehicle_page.is_displayed(locator) or element_present:
-                if not vehicle_page.is_displayed(locator):
+            element_present = page.wait_for_element(locator)
+            if page.is_displayed(locator) or element_present:
+                if not page.is_displayed(locator):
                     print(f"Warning: {name} found by locator but 'is_displayed' is False. Proceeding with click.")
                 
                 # Interaction Check
-                vehicle_page.click(locator)
+                page.click(locator)
                 print(f"Clicked {name}. (Action Performed)")
                 time.sleep(1) 
                 
@@ -79,7 +79,7 @@ def test_quick_settings_full(driver):
     print("\n[Step] Verifying Control Rows (Sunblind, Lights, Wipers)...")
     
     # 4.1 Sunblind Text
-    if vehicle_page.is_displayed(vehicle_page.QS_SUNBLIND_TEXT):
+    if page.is_displayed(page.QS_SUNBLIND_TEXT):
         print("Verified 'Sunblind' (선블라인드) Text (Red Box Item).")
     else:
         print("Warning: 'Sunblind' Text not found.")
@@ -88,7 +88,7 @@ def test_quick_settings_full(driver):
     # Logic: Get all 'Auto' buttons, sort by Y, and map to expected rows.
     # Expected Order (Top to Bottom): Sunblind -> Lights -> Front Wiper -> Rear Wiper
     try:
-        auto_btns = vehicle_page.driver.find_elements(*vehicle_page.QS_AUTO_LABEL)
+        auto_btns = page.driver.find_elements(*page.QS_AUTO_LABEL)
         # Filter for visible ones in the right panel (x > 800 approx) if needed, 
         # but Quick Settings usually is the main view.
         
