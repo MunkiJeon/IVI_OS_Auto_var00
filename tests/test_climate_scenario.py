@@ -1,46 +1,50 @@
 
 import pytest
 import time
-from appium.webdriver.common.appiumby import AppiumBy
 from pages.vehicle_control_page import VehicleControlPage
 
 class TestClimateScenario:
-    def test_climate_toggles(self, driver):
-        print("\n[Test] Climate: Toggle all buttons")
-        page = VehicleControlPage(driver)
-        page.start()
-        time.sleep(3)
-        
-        page.reset_sidebar()
-        page.click_sidebar_menu("공조")
+    """
+    공조 (Climate) 탭 테스트 시나리오
+    - 공조 관련 편의 기능 토글 (워셔액, 터널 진입, 공기 질 등)
+    """
+
+    @pytest.fixture(autouse=True)
+    def setup(self, driver):
+        """각 테스트 메서드 실행 전 초기화"""
+        self.page = VehicleControlPage(driver)
+        self.page.start()
+        time.sleep(2)
+        self.page.click_sidebar_menu("공조")
         time.sleep(1)
+        yield
+
+    def test_climate_feature_toggles(self, driver):
+        """
+        [시나리오] 공조 편의 기능 토글 테스트
+        - 각 설정 메뉴(워셔액, 터널, 공기 질 등)의 텍스트 옆 토글 스위치를 좌표 기반으로 제어합니다.
+        """
+        print("\n[Test] 공조 편의 기능 토글 테스트 시작")
         
-        # List of Toggle Texts from XML/Page Object
+        # 테스트할 토글 목록
         toggles = [
-            page.CLIMATE_WASHER,
-            page.CLIMATE_TUNNEL,
-            page.CLIMATE_AIR_QUALITY,
-            page.CLIMATE_OVERHEAT,
-            page.CLIMATE_AUTO_DRY
+            self.page.CLIMATE_WASHER,
+            self.page.CLIMATE_TUNNEL,
+            self.page.CLIMATE_AIR_QUALITY,
+            self.page.CLIMATE_OVERHEAT,
+            self.page.CLIMATE_AUTO_DRY
         ]
 
         for locator in toggles:
             try:
-                # page.scroll_to_element(locator) #화면 스크롤 해야되는 경우 활성화
-
-                cam_label = driver.find_element(*locator)
-                rect = cam_label.rect # {'x': 100, 'y': 200, 'width': 50, 'height': 20}
-             
-                # Logic: X - 60, Y + 10    
-                target_x = rect['x'] - 60
-                target_y = rect['y'] + 10
-             
-                print(f"Found {locator} at {rect}. Tapping at ({target_x}, {target_y})")
-                
-                driver.tap([(target_x, target_y)])
+                # 토글 ON
+                self.page.toggle_tap(locator, x_offset=-60, y_offset=10)
                 time.sleep(1)
-                driver.tap([(target_x, target_y)])
+
+                # 토글 OFF (원복)
+                self.page.toggle_tap(locator, x_offset=-60, y_offset=10)
                 time.sleep(1)
                 
             except Exception as e:
-                print(f"Skipping toggle {locator}: {e}")
+                print(f"토글 제어 실패 ({locator}): {e}")
+                # 하나가 실패해도 다음 테스트 진행

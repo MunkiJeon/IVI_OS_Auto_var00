@@ -19,7 +19,12 @@ def driver():
         driver_instance.quit()
 
 from pages.vehicle_control_page import VehicleControlPage
+from pages.base_page import BasePage
 
 @pytest.fixture(scope="function")
-def page(driver):
+def vehicle_control_page(driver):
     return VehicleControlPage(driver)
+
+@pytest.fixture(scope="function")
+def base_page(driver):
+    return BasePage(driver)

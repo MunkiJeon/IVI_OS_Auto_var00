@@ -1,156 +1,169 @@
 
 import pytest
 import time
-import random
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.vehicle_control_page import VehicleControlPage
-
 class TestLightsScenario:
-    
-    def test_lights_switching(self, driver):
-        """
-        Navigate to Lights screen and toggle various light settings.
-        """
-        page = VehicleControlPage(driver)
-        page.start()
+    """
+    라이트 (Lights) 탭 테스트 시나리오
+    - 전조등 (끄기, 자동, 미등, 켜짐)
+    - 프렁크등 / 트렁크등
+    - 실내등 (전체, 개별 좌석)
+    - 무드 조명 (색상 변경, 저장)
+    """
+
+    @pytest.fixture(autouse=True)
+    def setup(self, driver):
+        """각 테스트 메서드 실행 전 초기화"""
+        self.page = VehicleControlPage(driver)
+        self.page.start()
         time.sleep(3)
-        
-        print("Navigating to Lights tab...")
-        page.click(page.MENU_LIGHTS)
-        
-        # Verify presence of key sections with Wait
-        print("Waiting for Escort Light option...")
+        self.page.click_sidebar_menu("라이트")
+        time.sleep(1)
+        yield
 
-        SCREEN_WIDTH = 1920
-        SCREEN_HEIGHT = 1080
-        def get_coords(ratio_x, ratio_y) :
-            return (int(SCREEN_WIDTH * ratio_x), int(SCREEN_HEIGHT * ratio_y))
-
-        for name, (rx, ry) in page.Lights_IconBtn.items():
-            x, y = get_coords(rx, ry)
-            print(f"Testing {name} at ({x}, {y})...")
-            driver.tap([(x, y)])
-            time.sleep(3)
-
+    def test_headlights(self, driver):
+        """
+        [시나리오] 전조등 설정 테스트
+        - 좌표 기반 버튼 클릭 (전조등 끄기, 자동, 미등, 켜짐 등)
+        """
+        print("\n[Test] 전조등 설정 테스트 시작")
         
-        # Scenario: Frunk Light Toggle (Off -> On -> Auto)
-        print("Testing Frunk Light Toggles...")
-        actions = [
-            (page.LIGHT_FRUNK_ON, "Frunk Light ON"),
-            (page.LIGHT_FRUNK_AUTO, "Frunk Light AUTO"),
-            (page.LIGHT_FRUNK_OFF, "Frunk Light OFF")
+        self.page.click_grouped_button("전조등", 0, 4, 652, 71, 14) # 부드럽게
+        time.sleep(1)
+        self.page.click_grouped_button("전조등", 1, 4, 652, 71, 14) # 표준
+        time.sleep(1)
+        self.page.click_grouped_button("전조등", 2, 4, 652, 71, 14) # 빠르게
+        time.sleep(1)
+        self.page.click_grouped_button("전조등", 3, 4, 652, 71, 14) # 빠르게
+        time.sleep(1)
+
+        #전조등 자동
+        self.page.toggle_tap(self.page.LIGHT_HEADLIGHT, x_offset=0, y_offset=150)
+        time.sleep(1)
+        self.page.toggle_tap(self.page.LIGHT_HEADLIGHT, x_offset=0, y_offset=150)
+        time.sleep(1)
+        #에스코트 조명
+        self.page.toggle_tap(self.page.LIGHT_ESCOOT_LIGHT, x_offset=-60, y_offset=10)
+        time.sleep(1)
+        self.page.toggle_tap(self.page.LIGHT_ESCOOT_LIGHT, x_offset=-60, y_offset=10)
+        time.sleep(1)
+
+    def test_frunk_trunk_lights(self, driver):
+        """
+        [시나리오] 프렁크등 및 트렁크등 테스트
+        - 프렁크등 (켜기/자동/끄기)
+        - 트렁크등 (켜기/자동/끄기)
+        """
+        print("\n[Test] 프렁크/트렁크등 테스트 시작")
+        
+        # 프렁크등
+        self.page.click_after_text("프렁크등", "켜기")
+        time.sleep(1)
+        self.page.click_after_text("프렁크등", "자동")
+        time.sleep(1)
+        self.page.click_after_text("프렁크등", "끄기")
+        time.sleep(1)
+
+        # 트렁크등
+        self.page.click_after_text("트렁크등", "켜기")
+        time.sleep(1)
+        self.page.click_after_text("트렁크등", "자동")
+        time.sleep(1)
+        self.page.click_after_text("트렁크등", "끄기")
+        time.sleep(1)
+
+    def test_interior_lights(self, driver):
+        """
+        [시나리오] 실내등 테스트
+        - 하단 스크롤 후 실내등 메뉴 접근
+        - 전체 끄기, 개별 좌석 제어 테스트
+        """
+        print("\n[Test] 실내등 테스트 시작")
+        
+        # 스크롤하여 실내등 섹션으로 이동
+        if not self.page.scroll_and_find(self.page.LIGHT_INTERIOR_ALL_SEATS):
+            pytest.fail("실내등 메뉴를 찾을 수 없습니다.")
+
+        # 개별 좌석 토글
+        seats = [
+            self.page.LIGHT_INTERIOR_ALL_OFF,
+            self.page.LIGHT_INTERIOR_DRIVER,
+            self.page.LIGHT_INTERIOR_PASSENGER,
+            self.page.LIGHT_INTERIOR_REAR_LEFT,
+            self.page.LIGHT_INTERIOR_REAR_RIGHT,
+            self.page.LIGHT_INTERIOR_ALL_SEATS,
+            self.page.LIGHT_INTERIOR_ALL_OFF,
         ]
         
-        for locator, name in actions:
-            print(f"Selecting {name}...")
-            # Check if visible before clicking to be safe (handling scroll if needed later)
-            if page.is_displayed(locator):
-                page.click(locator)
-                time.sleep(1)
+        for seat in seats:
+            if not self.page.scroll_and_find(seat):
+                pytest.fail(f"{seat}를 찾을 수 없습니다.")
             else:
-                print(f"Warning: {name} not visible (might need scroll)")
-
-        # Scenario: Trunk Light Toggle (Off -> On -> Auto)
-        print("Testing Trunk Light Toggles...")
-        trunk_actions = [
-            (page.LIGHT_TRUNK_ON, "Trunk Light ON"),
-            (page.LIGHT_TRUNK_AUTO, "Trunk Light AUTO"),
-            (page.LIGHT_TRUNK_OFF, "Trunk Light OFF")
-        ]
-
-        for locator, name in trunk_actions:
-            print(f"Selecting {name}...")
-            if page.is_displayed(locator):
-                page.click(locator)
+                print(f"{seat} 클릭.")
+                self.page.click(seat)
                 time.sleep(1)
-            else:
-                 print(f"Warning: {name} not visible")
+
+    def test_mood_lights(self, driver):
+        """
+        [시나리오] 무드 조명 테스트
+        - 무드 조명 켜기
+        - 색상 설정 팝업 진입
+        - 색상 선택 및 저장
+        """
+        print("\n[Test] 무드 조명 테스트 시작")
         
-        # Scenario: Scroll down to reveal Interior/Mood Lights
-        print("Scrolling down to find Interior/Mood Lights...")
-        page.scroll_down()
-        time.sleep(2)
-
-        # check Interior Lights
-        print("Testing Interior Lights...")
-        if page.is_displayed(page.LIGHT_INTERIOR_ALL_SEATS):
-            page.click(page.LIGHT_INTERIOR_ALL_OFF)
-            time.sleep(1)
-            page.click(page.LIGHT_INTERIOR_DRIVER) # Toggle Driver Seat
-            time.sleep(1)
-            page.click(page.LIGHT_INTERIOR_PASSENGER) # Toggle Driver Seat
-            time.sleep(1)
-            page.click(page.LIGHT_INTERIOR_REAR_LEFT) # Toggle Driver Seat
-            time.sleep(1)
-            page.click(page.LIGHT_INTERIOR_REAR_RIGHT) # Toggle Driver Seat
-            time.sleep(1)
-        else:
-            print("Error: Interior Lights 'All Seats' button not found after scroll.")
-
-        # Check Mood Lights
-        print("Testing Mood Lights...")
-        if page.is_displayed(page.LIGHT_MOOD_ON):
-            page.click(page.LIGHT_MOOD_ON)
-            time.sleep(1)
+        # 스크롤하여 무드 조명으로 이동
+        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_ON):
+            pytest.fail("무드 조명 메뉴를 찾을 수 없습니다.")
             
-            # Try to adjust brightness if visible
-            if page.is_displayed(page.LIGHT_MOOD_BRIGHTNESS):
-                print("Adjusting Mood Light Brightness...")
-                # Simple tap on the bar (center) or logic to slide could be added
-                # For now just checking presence
-                page.is_displayed(page.LIGHT_MOOD_BRIGHTNESS)
-        else:
-             print("Error: Mood Light 'On' button not found after scroll.")
+        # 무드 조명 켜기
+        self.page.click_after_text("무드 조명", "끄기")
+        time.sleep(1)
+        self.page.click_after_text("무드 조명", "자동")
+        time.sleep(1)
+        self.page.click_after_text("무드 조명", "켜기")
+        time.sleep(1)
 
-        # Extra Scroll as per User Request
-        print("Performing extra scroll to ensure all bottom elements are visible...")
-        page.scroll_down()
-        time.sleep(2)
+        # 조명 밝기 변경
+
+        sw_rect = driver.find_element(*self.page.LIGHT_MOOD_COLOR).rect
+        target_x = sw_rect['x'] + sw_rect['width']
+        target_y = sw_rect['y'] + sw_rect['height']//2
+        print(f"Found {self.page.LIGHT_MOOD_COLOR} at {sw_rect}. \nTapping at ({target_x}, {target_y})")
+
+        self.page.random_area_interaction(target_x + 160, target_y, target_x + 480, target_y, interaction_type='drag')
+        time.sleep(1)
+        com = 120
+        for i in range(2):
+            for j in range(3):
+                self.page.tap_coordinates(x=target_x + com, y=target_y) #밝기 감소
+                if com == 120: print("밝기 감소") 
+                elif com == 520: print("밝기 증가")
+                time.sleep(1)
+            com += 400
+
+        self.page.tap_coordinates(x=target_x + 520, y=target_y) #밝기 증가_10@
+        print("밝기 증가")
+        time.sleep(1)
+
+        # 색상 설정 진입
+        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_COLOR):
+            pytest.fail("무드 조명 색상 버튼을 찾을 수 없습니다.")
+            
+        print("색상 설정 진입...")
+        self.page.click(self.page.LIGHT_MOOD_COLOR)
+        time.sleep(1)
         
-        # Re-verify Mood Lights after extra scroll
-        print("Re-verifying Mood Lights after extra scroll...")
-        if page.is_displayed(page.LIGHT_MOOD_ON):
-             print("Verified: Mood Light 'On' button is visible.")
-        else:
-             print("Error: Mood Light 'On' button not visible after extra scroll.")
+        # 색상 휠 영역에서 랜덤 인터랙션 (탭 또는 드래그)
+        print("색상 휠 영역에서 랜덤 인터랙션 수행...")
+        self.page.random_area_interaction(1050, 255, 1485, 590, interaction_type='drag')
+        time.sleep(1)
+        self.page.random_area_interaction(1050, 695, 1485, 695, interaction_type='drag')
+        time.sleep(1)
 
-        print("Lights scenario completed.")
-
-        if not page.scroll_to_element(page.LIGHT_MOOD_COLOR, max_scrolls=3):
-            pytest.fail("Mood Light not found")
+        # 저장
+        print("저장 버튼 클릭...")
+        self.page.click(self.page.LIGHT_MOOD_SAVE_BTN)
+        time.sleep(1)
         
-        try:
-            # Click Mood Light to enter/expand
-            page.click(page.LIGHT_MOOD_COLOR)
-            time.sleep(1)
-            
-            # Click "On" (Assuming generic 'On' text locator for now)
-            try:
-                on_xpath = "//android.widget.TextView[@text='색상']"
-                page.click((AppiumBy.XPATH, on_xpath))
-                print("Clicked 'On'")
-            except:
-                 print("Could not find 'On' button, checking Color button directly.")
-
-            time.sleep(1)
-            
-            # Pick Random Color
-            dims = page.driver.get_window_size()
-            x = dims['width'] // 2
-            y = dims['height'] // 2
-            page.driver.tap([(x, y)]) 
-            print("Tapped Center (Random Color)")
-            time.sleep(1)
-            
-            # Click Save
-            page.click(page.LIGHT_MOOD_SAVE_BTN)
-            print("Clicked Save")
-            time.sleep(1)
-            
-        except Exception as e:
-            print(f"Error in Lights Test: {e}")
-            from datetime import datetime
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            with open(f"error_source_lights_{timestamp}.xml", "w", encoding='utf-8') as f:
-                f.write(page.driver.page_source)
-            pytest.fail(f"Test failed: {e}")

@@ -7,9 +7,6 @@ def test_navigation_scenario(driver):
     page = VehicleControlPage(driver)
     page.start()
     
-    # Reset Sidebar to ensure top menus are visible
-    page.reset_sidebar()
-    
     # Click Navigation Menu
     print("Navigating to Navigation...")
     page.click(page.MENU_NAVIGATION)

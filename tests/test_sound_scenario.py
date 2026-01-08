@@ -25,7 +25,6 @@ def test_sound_scenario(driver):
     
     # Click Sound Menu
     print("Navigating to Sound (with auto-scroll)...")
-    page.reset_sidebar()
     page.click_sidebar_menu("사운드")
     time.sleep(2)
     

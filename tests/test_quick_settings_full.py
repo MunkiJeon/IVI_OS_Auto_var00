@@ -23,53 +23,54 @@ def test_quick_settings_full(driver):
     # IsAction=True implies we might expect a toggle or state change, currently just click verify.
     
     items_to_test = [
-        (page.QS_SIDE_MIRROR, "Side Mirror"),
         (page.QS_ALL_WINDOWS, "All Windows"),
-        (page.QS_WINDOW_LOCK, "Window Lock"), # Also in actions
-        (page.QS_DOOR_LOCK, "Door Lock"),     # Also in actions
+        (page.QS_WINDOW_LOCK, "Window Lock"),
         (page.QS_TRUNK, "Trunk"),
-        (page.QS_CHILD_LOCK, "Child Lock"),   # Also in actions
+        (page.QS_CHILD_LOCK, "Child Lock"),
+        (page.QS_DOOR_LOCK, "Door Lock"),
+        (page.QS_SUNBLIND, "Sunblind"),
         (page.QS_GLOVE_BOX, "Glove Box"),
-        (page.QS_STEERING_WHEEL, "Steering Wheel")
+        (page.QS_STEERING_WHEEL, "Steering Wheel"),
+        (page.QS_SIDE_MIRROR, "Side Mirror"),
     ]
     
     # 3. Iterate and Test
     SCREEN_WIDTH = 1920
     SCREEN_HEIGHT = 1080
+
+    page.random_area_interaction(1040, 370, 1340, 370, interaction_type='drag')
+    time.sleep(1)
+
     def get_coords(ratio_x, ratio_y) :
         return (int(SCREEN_WIDTH * ratio_x), int(SCREEN_HEIGHT * ratio_y))
 
-    for name, (rx, ry) in page.Quick_Settings_IconBtn.items():
+    # 4. IconBtn Test
+    for name, (rx, ry) in page.QS_IconBtn.items():
         x, y = get_coords(rx, ry)
         print(f"Testing {name} at ({x}, {y})...")
         driver.tap([(x, y)])
-        time.sleep(3)
+        time.sleep(1)
+        if (name == "전방 와이퍼 워셔액" or name == "후방 와이퍼 워셔액" or name == "라이트 자동 전조등" or name == "사이드 미러 개폐" or name == "충전 포트"):
+            driver.tap([(x, y)])
+            time.sleep(1)
 
     for locator, name in items_to_test:
         try:
             print(f"Testing {name}...")
-            
-            # Visibility Check (with Scroll if needed)
-            if not page.is_displayed(locator):
-                print(f"{name} not immediately visible. Attempting scroll...")
-                page.scroll_down()
+            if (name == "Steering Wheel"):
+                page.click(page.QS_STEERING_WHEEL)
                 time.sleep(1)
-            
-            element_present = page.wait_for_element(locator)
-            if page.is_displayed(locator) or element_present:
-                if not page.is_displayed(locator):
-                    print(f"Warning: {name} found by locator but 'is_displayed' is False. Proceeding with click.")
-                
-                # Interaction Check
-                page.click(locator)
-                print(f"Clicked {name}. (Action Performed)")
-                time.sleep(1) 
-                
-                # Optional: specific toggle verification logic can be added here
-                # e.g., if Name == "Window Lock", check if text changed or color changed (if attributes available)
-                
+                page.click(page.QS_STEERING_WHEEL_SAVE)
+                time.sleep(1)
+                page.click(page.QS_STEERING_WHEEL)
+                time.sleep(1)
+                page.click(page.QS_STEERING_WHEEL_RESTORE)
+                time.sleep(1)
             else:
-                pytest.fail(f"Element {name} verification failed: Not Visible/Present.")
+                page.click(locator)
+                time.sleep(1)
+                page.click(locator)
+                time.sleep(1)
                 
         except Exception as e:
             pytest.fail(f"Exception during testing {name}: {e}")
@@ -77,12 +78,6 @@ def test_quick_settings_full(driver):
     # 4. Special Check for Red Box Items (Rows)
     # Sunblind, Lights, Wipers (Front/Rear)
     print("\n[Step] Verifying Control Rows (Sunblind, Lights, Wipers)...")
-    
-    # 4.1 Sunblind Text
-    if page.is_displayed(page.QS_SUNBLIND_TEXT):
-        print("Verified 'Sunblind' (선블라인드) Text (Red Box Item).")
-    else:
-        print("Warning: 'Sunblind' Text not found.")
 
     # 4.2 Verify Rows by 'Auto' buttons
     # Logic: Get all 'Auto' buttons, sort by Y, and map to expected rows.

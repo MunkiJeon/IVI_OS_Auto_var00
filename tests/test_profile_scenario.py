@@ -25,7 +25,6 @@ def test_profile_scenario(driver):
     
     # Click Profile Menu
     print("Navigating to Profile (with auto-scroll)...")
-    page.reset_sidebar()
     page.click_sidebar_menu("프로필")
     time.sleep(2)
     

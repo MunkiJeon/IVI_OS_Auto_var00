@@ -4,155 +4,177 @@ import time
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import NoSuchElementException
 from pages.vehicle_control_page import VehicleControlPage
-
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.actions.action_builder import ActionBuilder
-from selenium.webdriver.common.actions.pointer_input import PointerInput
-from selenium.webdriver.common.actions import interaction
 
 class TestDrivingScenario:
-    def test_driving_features(self, driver):
-        x, y = 0, 0
-        print("\n[Test] Driving: Snow/Rain, ESC, Creep, Radio Buttons")
-        
-        page = VehicleControlPage(driver)
-        page.start()
-        time.sleep(3)
+    """
+    주행 (Driving) 탭 테스트 시나리오
+    - 주행 편의 기능 (눈/빗길, ESC, 크립 등)
+    - 주행 안전 (전방 충돌, 차선 이탈, 사각지대 등)
+    - 주행 상세 설정 (파킹 브레이크 롱프레스, 사각지대 카메라)
+    """
 
-        page.reset_sidebar()
-        page.click_sidebar_menu("주행")
+    @pytest.fixture(autouse=True)
+    def setup(self, driver):
+        """각 테스트 메서드 실행 전 초기화"""
+        self.page = VehicleControlPage(driver)
+        self.page.start()
+        time.sleep(2)
+        self.page.click_sidebar_menu("주행")
         time.sleep(1)
-        
-        # 1. Snow/Rain Assist Toggle
-        # Use CORRECT locator from page object (DRIVING_SNOW_RAIN_ASSIST)
-        page.click(page.DRIVING_ACCEL_MODE_GENTLE)
-        time.sleep(1)
-        page.click(page.DRIVING_ACCEL_MODE_STANDARD)
-        time.sleep(1)
-        page.click(page.DRIVING_ACCEL_MODE_FAST)
-        time.sleep(1)
+        self.toggles = [
+            self.page.DRIVING_SNOW_RAIN_ASSIST,
+            self.page.DRIVING_ESC,
+            self.page.DRIVING_AUTO_HOLD,
+            self.page.DRIVING_BLIND_SPOT_CAMERA,
+        ]
+        yield
 
+    def test_driving_convenience_toggles(self, driver):
+        """
+        [시나리오] 주행 편의 기능 토글 및 모드 변경
+        1. 가속 페달 모드 변경 (부드럽게, 표준, 빠르게)
+        2. 눈/빗길 보조 모드 토글 (좌표 기반 Tap)
+        3. 스티어링 모드 변경
+        4. ESC 토글 및 팝업 확인
+        5. 크립 모드 / 원페달 모드 전환
+        6. 오토 홀드 토글 및 팝업 확인
+        """
+        print("\n[Test] 주행 편의 기능 테스트 시작")
         
-        x, y = page.Driving_IconBtn["DRIVING_SNOW_RAIN_ASSIST"]
-        driver.tap([(x*1920, y*1080)])
+        # 가속 페달 모드 (Group Click 사용)
+        # 가계산 규격: 가로 652, 세로 71, 간격 14
+        self.page.click_grouped_button("가속 모드", 0, 3, 652, 71, 14) # 부드럽게
         time.sleep(1)
-        driver.tap([(x*1920, y*1080)])
+        self.page.click_grouped_button("가속 모드", 1, 3, 652, 71, 14) # 표준
         time.sleep(1)
-        # Verify Accel Mode disabled (optional check)
-        try:
-            # Use CORRECT locator (DRIVING_ACCEL_MODE_GENTLE)
-            accel_gentle = page.find_element(page.DRIVING_ACCEL_MODE_GENTLE)
-            print(f"Accel Mode Enabled: {accel_gentle.get_attribute('enabled')}")
-        except:
-            pass
-
-        page.click(page.DRIVING_STEERING_MODE_STANDARD)
-        time.sleep(1)
-        page.click(page.DRIVING_STEERING_MODE_LIGHT)
-        time.sleep(1)
-
-        x, y = page.Driving_IconBtn["DRIVING_ESC"]
-        driver.tap([(x*1920, y*1080)])
-        time.sleep(1)
-        driver.tap([(x*1920, y*1080)])
-        time.sleep(1)
-        
-        # 2. ESC Toggle -> Popup -> Off
-        # Check for Popup "끄기"
-        try:
-            popup_off = page.driver.find_element(AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
-            popup_off.click()
-            print("Confirmed ESC Off popup")
-        except NoSuchElementException:
-            print("ESC Popup not found (maybe already off?)")
-        
+        self.page.click_grouped_button("가속 모드", 2, 3, 652, 71, 14) # 빠르게
         time.sleep(1)
 
-        # 3. Creep Mode
-        if not page.scroll_to_element(page.DRIVING_CREEP):
-             pytest.fail("Creep Mode not found")
-        
-        page.click(page.DRIVING_ONE_PADAL_MODE)
+        # 눈/빗길 보조 모드 (좌표 Tap)
+        self.page.toggle_tap(self.toggles[0], x_offset=-60, y_offset=10)
         time.sleep(1)
-        page.click(page.DRIVING_CREEP)
+        self.page.toggle_tap(self.toggles[0], x_offset=-60, y_offset=10)
+        time.sleep(1)
+        
+        # 조향 반응 (Relative Click 사용)
+        self.page.click_after_text("조향 반응", "표준")
+        time.sleep(1)
+        self.page.click_after_text("조향 반응", "가볍게")
         time.sleep(1)
 
-        x, y = page.Driving_IconBtn["DRIVING_AUTO_HOLD"]
-        driver.tap([(x*1920, y*1080)])
+        # ESC 토글
+        self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
         time.sleep(1)
-        driver.tap([(x*1920, y*1080)])
-        time.sleep(1)
-
-        try:
-            popup_save = page.driver.find_element(AppiumBy.XPATH, "//android.widget.TextView[@text='확인']")
-            popup_save.click()
-            print("Confirmed Auto Hold Off popup")
-        except NoSuchElementException:
-            print("Auto Hold Popup not found")
-
-
-        if not page.scroll_to_element(page.DRIVING_LANE_DEPARTURE_WARNING):
-             pytest.fail("Lane Departure Warning not found")
-        
-        page.click(page.DRIVING_FORWARD_COLLISION_WARNING_DELAY)
-        time.sleep(1)
-        page.click(page.DRIVING_FORWARD_COLLISION_WARNING_NOMAL)
-        time.sleep(1)
-        page.click(page.DRIVING_FORWARD_COLLISION_WARNING_EARLY)
-        time.sleep(1)
-        
-        page.click(page.DRIVING_LANE_DEPARTURE_WARNING_OFF)
-        time.sleep(1)
-        page.click(page.DRIVING_LANE_DEPARTURE_WARNING_ON)
-        time.sleep(1)
-        page.click(page.DRIVING_LANE_DEPARTURE_WARNING_ALL)
+        self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
         time.sleep(1)
 
-        if not page.scroll_to_element(page.DRIVING_BLIND_SPOT_COLLISION_WARNING):
-             pytest.fail("Blind Spot Collision Warning not found")
+        self.page.popup_find_tap(self.page.DRIVING_ESC_POPUP_ON_BUTTON)
+        time.sleep(1)
+        self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
+        time.sleep(1)
+        self.page.popup_find_tap(self.page.DRIVING_ESC_POPUP_OFF_BUTTON)
+        time.sleep(1)
+
+        # 크립 모드 / 원페달 모드
+        if not self.page.scroll_and_find(self.page.DRIVING_ACCEL_PEDAL_MODE):
+             pytest.fail("가속 페달 모드 메뉴를 찾을 수 없습니다.")
         
-        page.click(page.DRIVING_BLIND_SPOT_COLLISION_WARNING_OFF)
+        self.page.click_after_text("가속 페달 모드", "원페달 모드")
         time.sleep(1)
-        page.click(page.DRIVING_BLIND_SPOT_COLLISION_WARNING_ON)
+        self.page.click_after_text("가속 페달 모드", "크립 모드")
         time.sleep(1)
-        page.click(page.DRIVING_BLIND_SPOT_COLLISION_WARNING_ALL)
+
+        # 오토 홀드
+        self.page.toggle_tap(self.toggles[2], x_offset=-60, y_offset=10)
         time.sleep(1)
+        if self.page.is_displayed(self.page.DRIVING_AUTO_HOLD_CONFIRM_BUTTON):
+            try:
+                self.page.popup_find_tap(self.page.DRIVING_AUTO_HOLD_CONFIRM_BUTTON)
+                time.sleep(1)
+            except NoSuchElementException:
+                print("오토 홀드 팝업 없음")
+        else:
+            self.page.toggle_tap(self.toggles[2], x_offset=-60, y_offset=10)
+            time.sleep(1)
+            try:
+                self.page.popup_find_tap(self.page.DRIVING_AUTO_HOLD_CONFIRM_BUTTON)
+                time.sleep(1)
+            except NoSuchElementException:
+                print("오토 홀드 팝업 없음")
+
         
 
-        if not page.scroll_to_element(page.DRIVING_EPB_BTN):
-             pytest.fail("Parking Brake not found")
+    def test_driving_safety_settings(self, driver):
+        """
+        [시나리오] 주행 안전 설정 테스트
+        1. 전방 충돌 경고 모드 (늦게/보통/일찍)
+        2. 차선 이탈 경고 모드 (끄기/경고만/경고와 제어)
+        3. 사각지대 충돌 경고 모드 (끄기/경고만/경고와 제어)
+        """
+        print("\n[Test] 주행 안전 설정 테스트 시작")
         
-        # --- NEW LOGIC START: Dynamic Tap relative to "사각지대 카메라" text ---
-        print("Finding '사각지대 카메라' text for dynamic coordinate tap...")
-        try:
-             page.scroll_to_element(page.DRIVING_BLIND_SPOT_CAMERA_TEXT)
-             
-             cam_label = driver.find_element(*page.DRIVING_BLIND_SPOT_CAMERA_TEXT)
-             rect = cam_label.rect # {'x': 100, 'y': 200, 'width': 50, 'height': 20}
-             
-             # Logic: X - 60, Y + 10
-             target_x = rect['x'] - 60
-             target_y = rect['y'] + 10
-             
-             print(f"Found '사각지대 카메라' at {rect}. Tapping at ({target_x}, {target_y})")
-             
-             driver.tap([(target_x, target_y)])
-             time.sleep(1)
-             driver.tap([(target_x, target_y)])
-             time.sleep(1)
-             
-        except Exception as e:
-             print(f"Warning: Could not find or interact with '사각지대 카메라' text. Error: {e}")
-             # Fallback to collision warning if needed, or just pass
-        # --- NEW LOGIC END ---
+        # 전방 충돌 경고 (Relative Click 사용)
+        if not self.page.scroll_and_find(self.page.DRIVING_FORWARD_COLLISION_WARNING):
+             pytest.fail("전방 충돌 경고 메뉴를 찾을 수 없습니다.")
         
-        # --- NEW LOGIC START: Parking Brake Long Press (2 seconds) ---
-        print("Performing Long Press on Parking Brake...")
-        epb_btn = page.find_element(page.DRIVING_EPB_BTN)
-        
-        # Using ActionChains for click and hold
-        actions = ActionChains(driver)
-        actions.click_and_hold(epb_btn).pause(2).release().perform()
-        print("Long Press completed.")
+        self.page.click_after_text("전방 충돌 경고", "늦게")
         time.sleep(1)
-        # --- NEW LOGIC END ---
+        self.page.click_after_text("전방 충돌 경고", "보통")
+        time.sleep(1)
+        self.page.click_after_text("전방 충돌 경고", "일찍")
+        time.sleep(1)
+        
+        # 차선 이탈 경고 (Relative Click 사용)
+        if not self.page.scroll_and_find(self.page.DRIVING_LANE_DEPARTURE_WARNING):
+             pytest.fail("차선 이탈 경고 메뉴를 찾을 수 없습니다.")
+        
+        self.page.click_after_text("차선 이탈 경고", "끄기")
+        time.sleep(1)
+        self.page.click_after_text("차선 이탈 경고", "경고만")
+        time.sleep(1)
+        self.page.click_after_text("차선 이탈 경고", "경고와 제어")
+        time.sleep(1)
+
+        # 사각지대 충돌 경고 (Relative Click 사용)
+        if not self.page.scroll_and_find(self.page.DRIVING_BLIND_SPOT_COLLISION_WARNING):
+             pytest.fail("사각지대 충돌 경고 메뉴를 찾을 수 없습니다.")
+        
+        self.page.click_after_text("사각지대 충돌 경고", "끄기")
+        time.sleep(1)
+        self.page.click_after_text("사각지대 충돌 경고", "경고만")
+        time.sleep(1)
+        self.page.click_after_text("사각지대 충돌 경고", "경고와 제어")
+        time.sleep(1)
+
+        """
+        [시나리오] 사각지대 화면(카메라) 토글 테스트
+        - '사각지대 카메라' 텍스트 레이블을 기준으로 상대 좌표를 계산하여 토글 스위치를 클릭합니다.
+        """
+        print("\n[Test] 사각지대 카메라 토글 테스트 시작")
+        
+        # 가장 아래쪽일 수 있으므로 스크롤
+        if not self.page.scroll_and_find(self.page.DRIVING_BLIND_SPOT_CAMERA):
+             pytest.fail("사각지대 카메라 버튼을 찾을 수 없습니다.")
+        
+        self.page.toggle_tap(self.toggles[3], x_offset=-60, y_offset=10)
+        time.sleep(1)
+        self.page.toggle_tap(self.toggles[3], x_offset=-60, y_offset=10)
+        time.sleep(1)
+
+    def test_driving_parking_brake(self, driver):
+        """
+        [시나리오] 전자식 파킹 브레이크 테스트
+        - 파킹 브레이크 버튼을 2초간 롱프레스(Long Press)합니다.
+        """
+        print("\n[Test] 파킹 브레이크 롱프레스 테스트 시작")
+        
+        if not self.page.scroll_and_find(self.page.DRIVING_EPB_BTN):
+             pytest.fail("파킹 브레이크 버튼을 찾을 수 없습니다.")
+        
+        print("파킹 브레이크 버튼 롱프레스 수행 (2초)...")
+        # BasePage의 common method 활용 가능하지만, 2초 delay 명시를 위해 직접 호출하거나
+        # BasePage에 long_press(duration) 추가된 것을 사용
+        self.page.long_press_element(self.page.DRIVING_EPB_BTN, duration=2000)
+        print("롱프레스 완료")
+        time.sleep(1)

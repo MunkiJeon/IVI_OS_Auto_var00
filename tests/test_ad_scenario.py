@@ -12,15 +12,16 @@ class TestADScenario:
         page.start()
         time.sleep(1)
         
-        page.reset_sidebar()
         page.click_sidebar_menu("AD")
         time.sleep(1)
         
         page.click(page.AD_SPEED_CURRENT)
+        print("Speed current")
         time.sleep(1)
      
         # Click Auto (Speed Limit)
         page.click(page.AD_SPEED_AUTO)
+        print("Speed auto")
         time.sleep(1)
         
         # Change Speed Offset (-5 to 5)
@@ -29,19 +30,25 @@ class TestADScenario:
         
         # Determine strict direction and count
         x, y = 0, 0
-        if target_offset < 0:
-            print("Decreasing speed offset...")
-            for _ in range(abs(target_offset)):
+        if page.is_displayed(page.AD_SPEED_TARGET):
+            print("Speed target is 10km/h => 5회 감속")
+            for _ in range(5):
                 # Use page defined locator for Minus
                 x, y = page.AD_IconBtn["AD_SPEED_MINUS"]
                 driver.tap([(x*1920, y*1080)])
-                time.sleep(0.5)
-        elif target_offset > 0:
-            print("Increasing speed offset...")
-            for _ in range(target_offset):
-                # Use page defined locator for Plus
-                x, y = page.AD_IconBtn["AD_SPEED_PLUS"]
-                driver.tap([(x*1920, y*1080)])
-                time.sleep(0.5)
-        
-        print(f"Adjusted speed by {target_offset}")
+                time.sleep(0.5) 
+
+        print(f"Decreasing speed offset by {target_offset}")
+        for _ in range(abs(target_offset)):
+            if target_offset < 0: x, y = page.AD_IconBtn["AD_SPEED_MINUS"]
+            elif target_offset > 0: x, y = page.AD_IconBtn["AD_SPEED_PLUS"]
+            driver.tap([(x*1920, y*1080)])
+            time.sleep(0.5)
+
+        page.click(page.AD_LANE_CHANGE_AUTO)
+        print("Lane change auto")
+        time.sleep(1)
+
+        page.click(page.AD_LANE_CHANGE_CONFIRM)
+        print("Lane change confirm")
+        time.sleep(1)

@@ -11,8 +11,6 @@ class TestAllTabsScenario:
         p = VehicleControlPage(driver)
         p.start()
         time.sleep(2)
-        # Ensure sidebar is at top initially
-        p.reset_sidebar()
         return p
 
     def test_01_quick_settings(self, page):
@@ -20,7 +18,6 @@ class TestAllTabsScenario:
         # Quick Settings is the default top tab usually, or explicitly click it
         # But 'Quick Settings' button in sidebar might be '빠른 설정'
         # Check if we need to click it.
-        # Ideally, reset_sidebar puts us near top.
         # page.click_sidebar_menu('빠른 설정') # If locator exists
         # Actually Menu locator is MENU_QUICK_SETTINGS = "(//...text='빠른 설정')"
         pass # Quick Settings logic already well-tested, we can add a simple check here
@@ -30,7 +27,6 @@ class TestAllTabsScenario:
 
     def test_02_lights(self, page):
         print("\n[Test] Lights Tab")
-        page.reset_sidebar()
         page.click(page.MENU_LIGHTS) # '라이트' should be visible after reset
         time.sleep(2)
         
@@ -54,14 +50,12 @@ class TestAllTabsScenario:
 
     def test_03_ad(self, page):
         print("\n[Test] AD Tab")
-        page.reset_sidebar()
         page.click(page.MENU_AD)
         time.sleep(2)
         assert page.is_displayed(page.AD_PRO), "AD 'Pro' option should be visible"
 
     def test_04_driving(self, page):
         print("\n[Test] Driving Tab")
-        page.reset_sidebar()
         page.click(page.MENU_DRIVING)
         time.sleep(2)
         assert page.is_displayed(page.DRIVING_ACCEL_MODE), "Driving 'Accel Mode' should be visible"
@@ -72,39 +66,30 @@ class TestAllTabsScenario:
 
     def test_05_lock(self, page):
         print("\n[Test] Lock Tab")
-        page.reset_sidebar()
         page.click(page.MENU_LOCK)
         time.sleep(2)
         assert page.is_displayed(page.LOCK_UNLOCK_ALL), "Lock 'Unlock All' should be visible"
 
     def test_06_seat(self, page):
         print("\n[Test] Seat Tab")
-        page.reset_sidebar()
         page.click(page.MENU_SEAT)
         time.sleep(2)
         assert page.is_displayed(page.SEAT_EASY_ACCESS), "Seat 'Easy Access' should be visible"
 
     def test_07_climate(self, page):
         print("\n[Test] Climate Tab")
-        page.reset_sidebar()
         page.click(page.MENU_CLIMATE)
         time.sleep(2)
         assert page.is_displayed(page.CLIMATE_AUTO_DRY), "Climate 'Auto Dry' should be visible"
     
     def test_08_charging(self, page):
         print("\n[Test] Charging Tab")
-        page.reset_sidebar()
         page.click(page.MENU_CHARGING)
         time.sleep(2)
         assert page.is_displayed(page.CHARGING_START), "Charging 'Start' should be visible"
 
     def test_09_navigation(self, page):
         print("\n[Test] Navigation Tab")
-        # Ensure we can reach it. Might need scroll if screen is short?
-        # Sidebar reset puts us at top. 
-        # Navigation is usually visible or just below.
-        page.reset_sidebar() 
-        # Click Navigation
         page.click(page.MENU_NAVIGATION)
         time.sleep(2)
         # Check element
@@ -117,8 +102,6 @@ class TestAllTabsScenario:
 
     def test_10_gleo_ai(self, page):
         print("\n[Test] Gleo AI Tab")
-        page.reset_sidebar()
-        # Gleo AI might be at bottom of Page 1 or top of Page 2
         page.click(page.MENU_GLEO_AI)
         time.sleep(2)
         assert page.is_displayed(page.GLEO_WAKE_WORD), "Gleo AI 'Wake Word' should be visible"
@@ -192,8 +175,6 @@ class TestAllTabsScenario:
 
     def test_21_vehicle_info(self, page):
         print("\n[Test] Vehicle Info Tab")
-        page.reset_sidebar() # Ensure clean state
-        page.scroll_to_bottom_sidebar() # Helper to ensure bottom
         page.click_sidebar_menu("차량 정보")
         time.sleep(2)
         # Verify Software Info

@@ -38,7 +38,6 @@ def main():
         for screen in screens:
             try:
                 print(f"--- Processing {screen} ---")
-                page.reset_sidebar()
                 time.sleep(1)
                 page.click_sidebar_menu(screen)
                 time.sleep(2)

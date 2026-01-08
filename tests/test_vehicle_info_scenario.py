@@ -17,8 +17,8 @@ def test_verify_vehicle_info_screen(driver):
     page.click_sidebar_menu("차량 정보")
 
     toggles = [
-        page.SOFTWARE_INFO,
-        page.AUTO_UPDATE,
+        page.VI_SOFTWARE_INFO,
+        page.VI_AUTO_UPDATE,
     ]
 
     for locator in toggles:
@@ -26,7 +26,7 @@ def test_verify_vehicle_info_screen(driver):
 
             cam_label = driver.find_element(*locator)
             rect = cam_label.rect # {'x': 100, 'y': 200, 'width': 50, 'height': 20}
-            if locator == page.AUTO_UPDATE:
+            if locator == page.VI_AUTO_UPDATE:
                 # Logic: X - 60, Y + 10    
                 target_x = rect['x'] - 60
                 target_y = rect['y'] + 10
@@ -37,7 +37,7 @@ def test_verify_vehicle_info_screen(driver):
                 driver.tap([(target_x, target_y)])
                 time.sleep(1)
    
-            if locator == page.SOFTWARE_INFO:
+            if locator == page.VI_SOFTWARE_INFO:
                 # Logic: X - 60, Y + 10    
                 target_x = rect['x'] + rect['width'] + 30
                 target_y = rect['y'] + 10
@@ -46,26 +46,25 @@ def test_verify_vehicle_info_screen(driver):
                 driver.tap([(target_x, target_y)])
                 time.sleep(1)
                 try:
-                    popup_save = page.driver.find_element(AppiumBy.XPATH, "//android.widget.TextView[@text='확인']")
-                    popup_save.click()
+                    page.popup_find_tap(page.VI_POPUP_OK)
                     time.sleep(2)
-                    print("Confirmed Auto Hold Off popup")
-                except NoSuchElementException:
+                except Exception:
                     print("Auto Hold Popup not found")
             
         except Exception as e:
             print(f"Skipping toggle {locator}: {e}")
 
-    
-    page.click(page.FACTORY_RESET)
+    page.click(page.VI_FACTORY_RESET)
     time.sleep(1)
-    page.click(page.LEGAL_INFO_BUTTON)
+    page.click(page.VI_INITIALIZE_BUTTON)
+    time.sleep(1)
+
+    page.click(page.VI_LEGAL_INFO_BUTTON)
     time.sleep(1)
     try:
-        popup_save = page.driver.find_element(AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
-        popup_save.click()
-        print("Confirmed Auto Hold Off popup")
-    except NoSuchElementException:
+        page.popup_find_tap(page.VI_POPUP_OK)
+        time.sleep(2)
+    except Exception:
         print("Auto Hold Popup not found")
 
 
