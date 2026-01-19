@@ -10,7 +10,8 @@ from selenium.webdriver.common.actions.pointer_input import PointerInput
 from selenium.common.exceptions import NoSuchElementException
 import time
 import random
-from config import AppConfig
+import subprocess
+from config import AppConfig, DeviceConfig
 
 if TYPE_CHECKING:
     from appium.webdriver.webdriver import WebDriver
@@ -101,7 +102,7 @@ class BasePage:
         
         for i in range(max_scrolls + 1):
             if self.is_displayed(locator):
-                print(f"요소 발견 ({i}회 스크롤)")
+                print(f"{self.title_split(locator)} 발견 ({i}회 스크롤)")
                 return True
             
             if i < max_scrolls:
@@ -143,6 +144,50 @@ class BasePage:
         except:
             return False
 
+    def get_texts(self, locator, timeout=None, exclude_texts=None, min_y=None, min_x=None):
+        """
+        여러 요소의 텍스트를 읽어 리스트(배열)로 반환합니다.
+        exclude_texts: 제외할 텍스트 리스트
+        min_y: 해당 Y 좌표 이상(화면 아래쪽)에 위치한 요소만 포함
+        min_x: 해당 X 좌표 이상(화면 오른쪽)에 위치한 요소만 포함
+        """
+        if exclude_texts is None:
+            exclude_texts = []
+        try:
+            elements = self.driver.find_elements(locator, timeout=timeout)
+            results = []
+            for element in elements:
+                text = element.text
+                if not text or text in exclude_texts:
+                    continue
+                
+                # 좌표 필터링 (min_y 이상만 추출)
+                if min_y is not None:
+                    if element.rect['y'] < min_y:
+                        continue
+
+                # 좌표 필터링 (min_x 이상만 추출)
+                if min_x is not None:
+                    if element.rect['x'] < min_x:
+                        continue
+                
+                results.append(text)
+            return results
+        except:
+            return []
+
+    def get_all_texts(self, timeout=None, exclude_texts=None, min_y=None, min_x=None):
+        """
+        화면 전체에서 텍스트를 읽어 리스트로 반환합니다.
+        exclude_texts: 결과에서 제외할 텍스트 리스트
+        min_y: 해당 Y 좌표 이상(화면 아래쪽)에 위치한 요소만 포함
+        min_x: 해당 X 좌표 이상(화면 오른쪽)에 위치한 요소만 포함
+        """
+        # 모든 요소를 찾는 일반적인 XPath
+        # Android: //* (또는 //android.widget.TextView 등 더 구체적으로 지정 가능하나 전체 탐색은 //*)
+        locator = (AppiumBy.XPATH, "//*")
+        return self.get_texts(locator, timeout=timeout, exclude_texts=exclude_texts, min_y=min_y, min_x=min_x)
+
     def scroll_to_element(self, locator):
         """
         화면을 스크롤하여 요소를 찾습니다. (UiScrollable 사용)
@@ -170,14 +215,14 @@ class BasePage:
             print(f"스크롤 실패 ({text}): {e}")
             return False
             
-    def scroll_down(self, duration=500):
+    def scroll_down(self, duration=1000):
         """
         화면을 아래로 스크롤합니다. (콘텐츠가 위로 이동)
         """
         size = self.driver.get_window_size()
-        start_x = size['width'] // 2
-        start_y = size['height'] * 0.8
-        end_y = size['height'] * 0.2
+        start_x = int(size['width'] * 0.90)
+        start_y = int(size['height'] * 0.8)
+        end_y = int(size['height'] * 0.2)
         self.swipe(start_x, start_y, start_x, end_y, duration)
 
     def scroll_up(self, duration=500):
@@ -185,9 +230,9 @@ class BasePage:
         화면을 위로 스크롤합니다. (콘텐츠가 아래로 이동)
         """
         size = self.driver.get_window_size()
-        start_x = size['width'] // 2
-        start_y = size['height'] * 0.2
-        end_y = size['height'] * 0.8
+        start_x = int(size['width'] * 0.90)
+        start_y = int(size['height'] * 0.2)
+        end_y = int(size['height'] * 0.8)
         self.swipe(start_x, start_y, start_x, end_y, duration)
 
     def swipe(self, start_x, start_y, end_x, end_y, duration=800):
@@ -208,6 +253,89 @@ class BasePage:
         element = self.find_element(locator)
         actions = ActionChains(self.driver)
         actions.click_and_hold(element).pause(duration / 1000).release().perform()
+
+    def long_press_coordinates(self, x, y, duration=2000):
+        """
+        특정 좌표를 길게 누릅니다.
+        1. mobile: longClickGesture (UiAutomator2 Native) 시도
+        2. 실패 시 ADB Shell Input Swipe (H/W Level) 시도
+        3. 최후의 수단으로 W3C Actions 시도
+        """
+        # 1. Try mobile: longClickGesture
+        try:
+            self.driver.execute_script('mobile: longClickGesture', {
+                'x': int(x),
+                'y': int(y),
+                'duration': int(duration)
+            })
+            print(f"[Long Press] ({x}, {y}) for {duration}ms (via mobile: longClickGesture)")
+            return
+        except Exception as e:
+            print(f"[Long Press] mobile: longClickGesture failed: {e}")
+
+        # 2. Try ADB Swipe (Input Keyevent logic)
+        try:
+            # Determine Device ID Dynamicallly
+            device_id = None
+            
+            # Method 1: Check 'udid' capability (Standard)
+            try:
+                device_id = self.driver.capabilities.get('udid')
+            except:
+                pass
+
+            # Method 2: Check 'deviceName' capability (Often contains IP:Port)
+            if not device_id:
+                try:
+                    name = self.driver.capabilities.get('deviceName')
+                    if name and ':' in name: # Looks like an IP:Port
+                        device_id = name
+                except:
+                    pass
+
+            # Method 3: Parsing Command Executor URL (e.g., http://127.0.0.1:4723/wd/hub -> check active sessions or config)
+            # Since we can't easily get the remote device ID from just the URL if it's not in caps,
+            # we will rely on what the user provided as 'connected' context.
+            # However, for robustness, if we still don't have an ID, we loop through ADB devices 
+            # and pick the one that matches the TCP_IP pattern if only one is connected via TCP,
+            # or failover to the one defined in Config if it matches an active device.
+            
+            if not device_id:
+                # Get list of connected stats
+                try:
+                    output = subprocess.check_output("adb devices", shell=True).decode('utf-8')
+                    lines = [line.strip() for line in output.split('\n') if line.strip() and 'device' in line and 'List' not in line]
+                    
+                    # If only 1 device is connected, use it.
+                    if len(lines) == 1:
+                        device_id = lines[0].split('\t')[0]
+                    else:
+                        # If multiple, try to find one that matches our Config.TCP_IP as a hint, 
+                        # but ideally 'udid' should have been present. 
+                        # As a fallback, check if any line matches the known IPs mentioned by user or config.
+                        # This part is tricky without an explicit link, but typically 'udid' is reliable in 99% cases for Appium.
+                        # Fallback to config if all else fails.
+                        device_id = DeviceConfig.TCP_DEVICE_ID
+                except:
+                    device_id = DeviceConfig.TCP_DEVICE_ID
+
+            print(f"[Long Press] Falling back to ADB on device: {device_id}")
+            cmd = f"adb -s {device_id} shell input swipe {int(x)} {int(y)} {int(x)} {int(y)} {int(duration)}"
+            subprocess.run(cmd, shell=True, check=True)
+            print(f"[Long Press] Executed ADB command: {cmd}")
+            return
+        except Exception as e:
+            print(f"[Long Press] ADB fallback failed: {e}")
+
+        # 3. Last Resort: W3C Actions
+        print("[Long Press] Falling back to W3C Actions (Likely to fail on Overlays)")
+        actions = ActionChains(self.driver)
+        actions.w3c_actions = ActionBuilder(self.driver, mouse=PointerInput(interaction.POINTER_TOUCH, 'touch'))
+        actions.w3c_actions.pointer_action.move_to_location(x, y)
+        actions.w3c_actions.pointer_action.pointer_down()
+        actions.w3c_actions.pointer_action.pause(duration / 1000)
+        actions.w3c_actions.pointer_action.release()
+        actions.perform()
 
     def tap_coordinates(self, x, y):
         """
@@ -263,7 +391,7 @@ class BasePage:
         rect = element.rect
         toggle_x = rect['x'] + x_offset
         toggle_y = rect['y'] + y_offset
-        print(f"{locator} 좌표: ({toggle_x}, {toggle_y})")
+        # print(f"{self.title_split(locator)} 좌표: ({toggle_x}, {toggle_y})")
         self.tap_coordinates(toggle_x, toggle_y)
 
     def popup_find_tap(self, locator):
@@ -273,9 +401,9 @@ class BasePage:
         try:
             popup_off = self.find_element(locator)
             popup_off.click()
-            print(f"{locator} 탭")
+            print(f"{self.title_split(locator)} 탭")
         except NoSuchElementException:
-            print(f"{locator} 없음")
+            print(f"{self.title_split(locator)} 없음")
 
     def click_after_text(self, anchor_text, target_text):
         """
@@ -283,6 +411,13 @@ class BasePage:
         이미 anchor_text를 찾은 상태라고 가정(scroll_and_find 호출됨)하며, 
         실패시에만 추가 스크롤을 시도합니다.
         """
+        anchor_text = anchor_text
+        target_text = target_text
+        if isinstance(anchor_text,tuple):
+            anchor_text = self.title_split(anchor_text)
+        if isinstance(target_text,tuple):
+            target_text = self.title_split(target_text)
+        
         xpath = f"//android.widget.TextView[@text='{anchor_text}']/following::android.widget.TextView[@text='{target_text}'][1]"
         print(f"[Relative Click] '{anchor_text}' -> '{target_text}' 클릭 시도...")
         
@@ -327,3 +462,6 @@ class BasePage:
             self.tap_coordinates(x, y)
         else:
             print(f"[Error] 잘못된 버튼 인덱스: {button_index}")
+
+    def title_split(self, locator):
+        return locator[1].split("//android.widget.TextView[@text='")[1].rsplit("']")[0]

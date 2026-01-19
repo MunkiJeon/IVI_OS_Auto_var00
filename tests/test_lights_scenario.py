@@ -22,7 +22,7 @@ class TestLightsScenario:
         time.sleep(1)
         yield
 
-    def test_headlights(self, driver):
+    def test_headlights(self):
         """
         [시나리오] 전조등 설정 테스트
         - 좌표 기반 버튼 클릭 (전조등 끄기, 자동, 미등, 켜짐 등)
@@ -114,10 +114,10 @@ class TestLightsScenario:
         print("\n[Test] 무드 조명 테스트 시작")
         
         # 스크롤하여 무드 조명으로 이동
-        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_ON):
+        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_ON, 4):
             pytest.fail("무드 조명 메뉴를 찾을 수 없습니다.")
             
-        # 무드 조명 켜기
+        # 무드 조명 켜기c
         self.page.click_after_text("무드 조명", "끄기")
         time.sleep(1)
         self.page.click_after_text("무드 조명", "자동")
@@ -126,7 +126,7 @@ class TestLightsScenario:
         time.sleep(1)
 
         # 조명 밝기 변경
-
+        self.page.scroll_content_down()
         sw_rect = driver.find_element(*self.page.LIGHT_MOOD_COLOR).rect
         target_x = sw_rect['x'] + sw_rect['width']
         target_y = sw_rect['y'] + sw_rect['height']//2

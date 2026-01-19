@@ -52,8 +52,8 @@ class VehicleControlPage(BasePage):
         "후방 와이퍼 자동":(0.725, 0.639),
         "후방 와이퍼 워셔액":(0.781,0.639), 
     }
-
-    QS_ALL_WINDOWS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 창문']")
+    # 타이틀 텍스트 없음
+    QS_ALL_WINDOWS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 창문']") # 타이틀 텍스트 대용
     QS_WINDOW_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='창문 잠금']")
     QS_TRUNK = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크']")
     QS_CHILD_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='차일드락']")
@@ -79,19 +79,19 @@ class VehicleControlPage(BasePage):
 
     # 전조등
     LIGHT_HEADLIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']")
-    LIGHT_HEADLIGHT_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='끄기']")
-    LIGHT_HEADLIGHT_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='자동']")
+    LIGHT_HEADLIGHT_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
+    LIGHT_HEADLIGHT_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
 
     #에스코트 조명
-    LIGHT_ESCOOT_LIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='전조등']/parent::*/parent::*//android.widget.TextView[@text='에스코트 조명']")
+    LIGHT_ESCOOT_LIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='에스코트 조명']")
     # 프렁크등
     LIGHT_FRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기'][1]")
     LIGHT_FRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='켜기'][1]")
     LIGHT_FRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동'][1]")
     # 트렁크등
-    LIGHT_TRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='끄기'][2]")
-    LIGHT_TRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='켜기'][2]")
-    LIGHT_TRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='트렁크등']/parent::*/parent::*//android.widget.TextView[@text='자동'][2]")
+    LIGHT_TRUNK_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기'][2]")
+    LIGHT_TRUNK_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='켜기'][2]")
+    LIGHT_TRUNK_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동'][2]")
     # 실내등 (Header)
     LIGHT_INTERIOR_ALL_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
     LIGHT_INTERIOR_ALL_SEATS = (AppiumBy.XPATH, "//android.widget.TextView[@text='모든 좌석']")
@@ -100,10 +100,10 @@ class VehicleControlPage(BasePage):
     LIGHT_INTERIOR_REAR_LEFT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 좌측']")
     LIGHT_INTERIOR_REAR_RIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 우측']")
     # 무드 조명
-    LIGHT_MOOD_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='끄기']")
-    LIGHT_MOOD_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='켜기']")
-    LIGHT_MOOD_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='자동']")
-    LIGHT_MOOD_COLOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='무드 조명']/following-sibling::*//android.widget.TextView[@text='색상']")
+    LIGHT_MOOD_OFF = (AppiumBy.XPATH, "//android.widget.TextView[@text='끄기']")
+    LIGHT_MOOD_ON = (AppiumBy.XPATH, "//android.widget.TextView[@text='켜기']")
+    LIGHT_MOOD_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
+    LIGHT_MOOD_COLOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='색상']")
     LIGHT_MOOD_BRIGHTNESS = (AppiumBy.CLASS_NAME, "android.widget.SeekBar")
     LIGHT_MOOD_SAVE_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
 
@@ -113,11 +113,14 @@ class VehicleControlPage(BasePage):
         "AD_SPEED_PLUS":(0.781, 0.555),
     }
     
+    AD_MODE_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='자율주행 모드']")
     AD_MODE_PRO = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로']")
     AD_MODE_MAX = (AppiumBy.XPATH, "//android.widget.TextView[@text='맥스']")
+    AD_SPEED_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='자율주행 속도']")
     AD_SPEED_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 (제한 속도)']")
     AD_SPEED_CURRENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 속도']")
     AD_SPEED_TARGET = (AppiumBy.XPATH, "//android.widget.TextView[@text='10km/h']")
+    AD_LANE_CHANGE_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차선 변경']")
     AD_LANE_CHANGE_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
     AD_LANE_CHANGE_CONFIRM = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전자 확인']")
 
@@ -130,6 +133,7 @@ class VehicleControlPage(BasePage):
         "DRIVING_PARKING_BRAKE":(0.572, 0.555),
     }
 
+    DRIVING_MODE_STYLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='주행 스타일']")
     DRIVING_ACCEL_MODE = (AppiumBy.XPATH, "//android.widget.TextView[@text='가속 모드']")
     DRIVING_ACCEL_MODE_GENTLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='부드럽게']")
     DRIVING_ACCEL_MODE_STANDARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='표준']")
@@ -166,6 +170,8 @@ class VehicleControlPage(BasePage):
     DRIVING_EPB_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='파킹 브레이크']")
 
     # --- 잠금 (Lock) ---------------------------------------------------------------------------
+
+    LOCK_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='잠금']")
     LOCK_UNLOCK_ALL = (AppiumBy.XPATH, "//android.widget.TextView[@text='모두']")
     LOCK_DRIVER_ONLY = (AppiumBy.XPATH, "//android.widget.TextView[@text='운전석만']")
 
@@ -181,7 +187,7 @@ class VehicleControlPage(BasePage):
         "뒷좌석 좌측": (0.799, 0.685),
         "뒷좌석 우측": (0.799, 0.555),
     }
-
+    SEAT_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='시트 포지션']")
     SEAT_MEMORY_1 = (AppiumBy.XPATH, "//android.widget.TextView[@text='1']")
     SEAT_MEMORY_2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='2']")
     SEAT_POSITION_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장']")
@@ -194,7 +200,8 @@ class VehicleControlPage(BasePage):
     SEAT_HANDLE_RESTORE = (AppiumBy.XPATH, "//android.widget.TextView[@text='복원']")
     
     # --- 공조 (Climate) -----------------------------------------------------------------------
-    CLIMATE_AUTO_RECIRC = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']")
+    # 타이틀 텍스트 없음
+    CLIMATE_AUTO_RECIRC = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동 내기 전환']") # 타이틀 텍스트 대용
     CLIMATE_WASHER = (AppiumBy.XPATH, "//android.widget.TextView[@text='워셔액 분사']")
     CLIMATE_TUNNEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='터널 진입']")
     CLIMATE_AIR_QUALITY = (AppiumBy.XPATH, "//android.widget.TextView[@text='공기 질 저하']")
@@ -202,7 +209,7 @@ class VehicleControlPage(BasePage):
     CLIMATE_AUTO_DRY = (AppiumBy.XPATH, "//android.widget.TextView[@text='에어컨 자동 건조']")
 
     # --- 충전 (Charging) -----------------------------------------------------------------------
-    CHARGING_IconBtn = {
+    Charging_IconBtn = {
         "CHARGING_100%":(0.968, 0.324),
         "CHARGING_80%":(0.885, 0.324),
         "CHARGING_60%":(0.794, 0.324),
@@ -212,16 +219,19 @@ class VehicleControlPage(BasePage):
         "PLUS":(0.682, 0.602),
     }
 
-    CHARGING_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전']")
-    CHARGING_START = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 시작']")
+    # 타이틀 텍스트 없음
+    CHARGING_100_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='배터리 보호를 위해 80%까지 충전을 권장합니다.']")
+    CHARGING_TOAST_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 충전량이 목표 충전량보다 높습니다.']")
+    CHARGING_START = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 시작']") # 타이틀 텍스트 대용
     CHARGING_UNLOCK_CONNECTOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='커넥터 잠금 해제']")
     CHARGING_REMAINING = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 잔량 표시']")
     CHARGING_KM = (AppiumBy.XPATH, "//android.widget.TextView[@text='km']")
     CHARGING_PERCENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='%']")
     CHARGING_SLOW_CHARGING = (AppiumBy.XPATH, "//android.widget.TextView[@text='완속 충전']")
     CHARGING_CHARGING_CURRENT = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전 전류']")
+    CHARGING_CHARGING_MAX = (AppiumBy.XPATH, "//android.widget.TextView[@text='20A']")
+    CHARGING_CHARGING_MIN = (AppiumBy.XPATH, "//android.widget.TextView[@text='5A']")
     CHARGING_CHARGING_MINUS = (AppiumBy.XPATH, "//android.widget.TextView[@text='-']")
-    CHARGING_CHARGING_MINUS2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='-']")
     CHARGING_CHARGING_PLUS = (AppiumBy.XPATH, "//android.widget.TextView[@text='+']")
     CHARGING_CONNECTOR = (AppiumBy.XPATH, "//android.widget.TextView[@text='커넥터 잠금 설정']")
     CHARGING_ALWAYS_LOCK = (AppiumBy.XPATH, "//android.widget.TextView[@text='상시 잠금']")
@@ -235,8 +245,7 @@ class VehicleControlPage(BasePage):
     CHARGING_60 = (AppiumBy.XPATH, "//android.widget.TextView[@text='60%']")
     CHARGING_40 = (AppiumBy.XPATH, "//android.widget.TextView[@text='40%']")
     CHARGING_20 = (AppiumBy.XPATH, "//android.widget.TextView[@text='20%']")
-    CHARGING_100_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='배터리 보호를 위해 80%까지 충전을 권장합니다.']")
-    CHARGING_TOAST_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 충전량이 목표 충전량보다 높습니다.']")
+    
 
     # --- 네비게이션 (Navigation) -----------------------------------------------------------------------
     Nav_IconBtn = {
@@ -245,14 +254,35 @@ class VehicleControlPage(BasePage):
         "Initialize2":(0.573, 0.648),
     }
 
-    NAV_CHARGING_STATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전소']")
+    # 타이틀 텍스트 없음
+    NAV_CHARGING_STATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전소']") # 타이틀 텍스트 대용
+    NAV_PREF_STATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='선호 충전소']")
+    NAV_ROUTE_PREFERENCES = (AppiumBy.XPATH, "//android.widget.TextView[@text='Route Preferences']")
     NAV_EV_ROUTE = (AppiumBy.XPATH, "//android.widget.TextView[@text='EV 경로 계획']")
     NAV_EV_ROUTE_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='목적지까지 이동하기에 배터리가 부족할 것으로 예상되면 경로에 선호 충전소가 추가됩니다.']")
-    NAV_PREF_STATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='선호 충전소']")
+    NAV_AVOID_TOLLS = (AppiumBy.XPATH, "//android.widget.TextView[@text='Avoid Tolls']")
+    NAV_AVOID_TOLLS_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Prioritizes routes without toll roads.']")
+    NAV_AVOID_SCHOOL_ZONES = (AppiumBy.XPATH, "//android.widget.TextView[@text='Avoid School Zones']")
+    NAV_AVOID_SCHOOL_ZONES_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Prioritizes routes without school zones.']")
+    NAV_SOUNDS = (AppiumBy.XPATH, "//android.widget.TextView[@text='Sounds']")
+    NAV_VOICE_GUIDANCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='Voice guidance']")
+    NAV_VOICE_GUIDANCE_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Turn voice guidance on or off.']")
+    NAV_NOTIFICATIONS_SOUND = (AppiumBy.XPATH, "//android.widget.TextView[@text='Notifications Sound']")
+    NAV_NOTIFICATIONS_SOUND_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Turn the notification sound on or off.']")
+    NAV_OVERSPEED_WARNING_SOUND = (AppiumBy.XPATH, "//android.widget.TextView[@text='Overspeed warning sound']")
+    NAV_OVERSPEED_WARNING_SOUND_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Enables or disables the warning sound when the speed limit is exceeded.']")
+
     NAV_PREF_STATION_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='충전소 검색 및 경로 안내 시, 선택한 사업자의 충전소를 우선 표시합니다.']")
     NAV_VERSION = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '버전 정보')]")
     NAV_VERSION_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '2.3.0')]") # dynamic version check?
     NAV_DATA = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '데이터 관리')]")
+    NAV_CLEAR_SEARCH_HISTORY = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Clear Search History' or '검색 기록 초기화')]")
+    NAV_CLEAR_SEARCH_HISTORY_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Clear your search history, including recent searches and search-based recommendations.')]")
+    NAV_CLEAR_DRIVING_HISTORY = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Clear Driving History' or '주행 기록 초기화')]")
+    NAV_CLEAR_DRIVING_HISTORY_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Clear your driving history, including visited destinations.')]")
+    NAV_DELETE_ALL_DATA = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Delete All Data' or '모든 데이터 삭제')]")
+    NAV_DELETE_ALL_DATA_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Deletes all navigation history, including search history, favorites, and driving history.')]")
+    
     NAV_INITIALIZE = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '사용 이력 초기화')]")
     NAV_INITIALIZE_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '최근 목적지, 즐겨찾기, 주행 기록 등 내비게이션 사용 이력을 모두 삭제합니다.')]")
     NAV_INITIALIZE_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, '초기화')]")
@@ -286,8 +316,8 @@ class VehicleControlPage(BasePage):
     GLEO_REAR_LEFT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 좌측']")
     GLEO_REAR_RIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='뒷좌석 우측']")
     GLEO_CALLING_POPUP_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text=\"'글레오'라고 부르면 글레오 AI가 응답합니다. 기능을 활성화하면 호출어 인식을 위해 음성 정보가 수집될 수 있습니다.\"]")
-    GLEO_CALLING_POPUP_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@text='활성화']")
-    GLEO_CALLING_POPUP_BUTTON2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
+    GLEO_CALLING_POPUP_ENABLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='활성화']")
+    GLEO_CALLING_POPUP_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
 
     # Display (화면) ---------------------------------------------------------------------------
     DIS_IconBtn = {
@@ -296,7 +326,8 @@ class VehicleControlPage(BasePage):
         "DIS_CLEENING_MODE_END":(0.173, 0.589),
     }
 
-    DIS_THEME = (AppiumBy.XPATH, "//android.widget.TextView[@text='테마']")
+    # 타이틀 텍스트 없음
+    DIS_THEME = (AppiumBy.XPATH, "//android.widget.TextView[@text='테마']") # 타이틀 텍스트 대용
     DIS_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
     DIS_AUTO_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='테마를 주변 밝기에 맞춰 자동으로 변경합니다.']")
     DIS_LIGHT = (AppiumBy.XPATH, "//android.widget.TextView[@text='라이트']")
@@ -317,7 +348,7 @@ class VehicleControlPage(BasePage):
         "SND_HAM":(0.75, 0.352),
     }
 
-    SND_VOLUME = (AppiumBy.XPATH, "//android.widget.TextView[@text='음량']")
+    SND_VOLUME = (AppiumBy.XPATH, "//android.widget.TextView[@text='음량']") # 타이틀 텍스트 대용
     SND_QUIET = (AppiumBy.XPATH, "//android.widget.TextView[@text='조용한 모드']")
     SND_QUIET_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 내 사운드를 최소화해 조용하고 편안한 주행 환경을 제공합니다.']")
     SND_SYSTEM = (AppiumBy.XPATH, "//android.widget.TextView[@text='시스템']")
@@ -360,7 +391,7 @@ class VehicleControlPage(BasePage):
     SND_HIGH = (AppiumBy.XPATH, "//android.widget.TextView[@text='Hi']")
     SND_CONNECTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결 기기 음량']")
     SND_ANDROID = (AppiumBy.XPATH, "//android.widget.TextView[@text='Android Auto']")
-    SND_APPLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='Apple CarPlay']")
+    SND_APPLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='Apple Carplay']")
     
     # Profile (프로필) ---------------------------------------------------------------------------
     PROFILE_IconBtn = {
@@ -375,7 +406,7 @@ class VehicleControlPage(BasePage):
         "PROFILE_CRN":(0.563, 0.444),
     }
 
-    PROFILE_SETTINGS = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필 설정']")
+    PROFILE_SETTINGS = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필 설정']") # 타이틀 텍스트 대용
     PROFILE_ADD = (AppiumBy.XPATH, "//android.widget.TextView[@text='프로필 추가']")
     PROFILE_KEY = (AppiumBy.XPATH, "//android.widget.TextView[@text='키 관리']")
     PROFILE_CARDKEY = (AppiumBy.XPATH, "//android.widget.TextView[@text='NFC 카드키']")
@@ -421,13 +452,74 @@ class VehicleControlPage(BasePage):
     CONVENIENCE_STANDBY_MODE_POPUP_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='화면을 터치하거나 브레이크 페달을 밟으면 대기 모드가 해제됩니다.']")
 
     # --- 연결(Connection) ---------------------------------------------------------------------------
+
+    CONNECTION_IconBtn = {
+        "CONNECTION_WIFI_SETTINGS":(0.964, 0.435),
+        "CONNECTION_BACK_BUTTON":(0.547, 0.139),
+        "CONNECTION_ENTER":(0.737, 0.833),
+    }
+
     CONNECTION_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결']")
     CONNECTION_BLUETOOTH = (AppiumBy.XPATH, "//android.widget.TextView[@text='블루투스']")
+    CONNECTION_BLUETOOTH_ADD = (AppiumBy.XPATH, "//android.widget.TextView[@text='기기 추가']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결할 기기를 찾을 수 없나요?']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_CLOSE = (AppiumBy.XPATH, "//android.widget.TextView[@text='닫기']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
     CONNECTION_WIFI = (AppiumBy.XPATH, "//android.widget.TextView[@text='Wi-Fi']")
     CONNECTION_WIFI_HOTSPOT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Wi-Fi 핫스팟']")
     CONNECTION_MOBILE_DATA = (AppiumBy.XPATH, "//android.widget.TextView[@text='모바일 데이터']")
+    CONNECTION_BLUETOOTH_LIST = (AppiumBy.XPATH, "//android.widget.TextView[@text='등록된 기기 목록']")
+    CONNECTION_BLUETOOTH_ADD = (AppiumBy.XPATH, "//android.widget.TextView[@text='기기 추가']")
+    CONNECTION_BLUETOOTH_USE = (AppiumBy.XPATH, "//android.widget.TextView[@text='휴대폰 기능 사용']")
+    CONNECTION_BLUETOOTH_ANDROID_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='Android Auto']")
+    CONNECTION_BLUETOOTH_APPLE_CARPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='Apple CarPlay']")
+    CONNECTION_BLUETOOTH_ADD_POPUP = (AppiumBy.XPATH, "//android.widget.TextView[@text='신규 기기 추가']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='기기가 켜져 있고 검색 가능한지 확인하세요.']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_TEXT2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결할 기기를 찾을 수 없나요?']")
+    CONNECTION_BLUETOOTH_ADD_POPUP_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
+    CONNECTION_BLUETOOTH_ADD_FIND = (AppiumBy.XPATH, "//android.widget.TextView[@text='기기에서 연결']")
+    CONNECTION_BLUETOOTH_ADD_NAME = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 이름:']")
+    CONNECTION_BLUETOOTH_ADD_NAME_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='CRP Devbox']")
+    CONNECTION_BLUETOOTH_ADD_NAME_TEXT2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='휴대전화 블루투스 설정에서 CRP Devbox 선택 후 연결하세요.']")
+    CONNECTION_BLUETOOTH_ADD_FIND_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='닫기']")
+    CONNECTION_WIFI_NOW = (AppiumBy.XPATH, "//android.widget.TextView[@text='현재 네트워크']")
+    CONNECTION_WIFI_ABLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결 가능한 네트워크']")
+    CONNECTION_WIFI_ADD = (AppiumBy.XPATH, "//android.widget.TextView[@text='네트워크 추가']")
+    CONNECTION_WIFI_NOW_SUCURITY = (AppiumBy.XPATH, "//android.widget.TextView[@text='보안']")
+    CONNECTION_WIFI_NOW_PASSWARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='비밀번호']")
+    CONNECTION_WIFI_NOW_CHECK = (AppiumBy.XPATH, "//android.widget.TextView[@text='확인']")
+    CONNECTION_WIFI_NOW_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
+    CONNECTION_WIFI_ADD_NAME = (AppiumBy.XPATH, "//android.widget.TextView[@text='네트워크 이름']")
+    CONNECTION_WIFI_ADD_NAME_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='이름 입력']")
+    CONNECTION_WIFI_ADD_PASSWARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='비밀번호 입력']")
+    CONNECTION_WIFI_ADD_CONNECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='연결']")
+    CONNECTION_WIFI_ADD_OPEN = (AppiumBy.XPATH, "//android.widget.TextView[@text='개방']")
+    CONNECTION_WIFI_ADD_WEP = (AppiumBy.XPATH, "//android.widget.TextView[@text='WEP']")
+    CONNECTION_WIFI_ADD_WPA2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='WPA/WPA2-개인']")
+    CONNECTION_WIFI_ADD_WPA3 = (AppiumBy.XPATH, "//android.widget.TextView[@text='WPA/WPA3-개인']")
+    CONNECTION_MOBILE_DATA_USAGE = (AppiumBy.XPATH, "//android.widget.TextView[@text='데이터 사용량']")
+    CONNECTION_MOBILE_DATA_MOBILE = (AppiumBy.XPATH, "//android.widget.TextView[@text='모바일 요금제']")
+    CONNECTION_MOBILE_AGENCY = (AppiumBy.XPATH, "//android.widget.TextView[@text='통신사']")
+    
 
     # --- 앱(Apps) ---------------------------------------------------------------------------
+
+    APPS_IconBtn = {
+        "APPS_TOGGLE":(0.552, 0.218),
+        "APPS_TOGGLE2":(0.552, 0.292),
+        "APPS_TOGGLE3":(0.552, 0.364),
+    }
+    APPS_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='기본 앱']") # 타이틀 텍스트 대용
+    APPS_NAVIGATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='(s)내비게이션']")
+    APPS_ANDROID_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='Android Auto']")
+    APPS_CARPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='CarPlay']")
+    APPS_CHROMIUM = (AppiumBy.XPATH, "//android.widget.TextView[@text='Chromium']")
+    APPS_CONNECT_MIRRORING = (AppiumBy.XPATH, "//android.widget.TextView[@text='Connect Mirroring']")
+    APPS_GLEO_AI_APP = (AppiumBy.XPATH, "//android.widget.TextView[@text='Gleo AI']")
+    APPS_PLEOS_APP_MARKET = (AppiumBy.XPATH, "//android.widget.TextView[@text='Pleos App Market']")
+    APPS_PROPERTY_TEST = (AppiumBy.XPATH, "//android.widget.TextView[@text='Property Test']")
+    APPS_SETUPWIZARD = (AppiumBy.XPATH, "//android.widget.TextView[@text='SetupWizard']")
+    APPS_TOKEN_SAMPLE_APP = (AppiumBy.XPATH, "//android.widget.TextView[@text='Token sample app']")
     APPS_VIVALDI = (AppiumBy.XPATH, "//android.widget.TextView[@text='Vivaldi Browser']")
     APPS_WIDGET_HOME = (AppiumBy.XPATH, "//android.widget.TextView[@text='WidgetHomeScreen']")
     APPS_SMART_KEY = (AppiumBy.XPATH, "//android.widget.TextView[@text='스마트키 콘솔']")
@@ -435,19 +527,22 @@ class VehicleControlPage(BasePage):
     APPS_VEHICLE_SETTINGS = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 설정']")
     APPS_CAMERA = (AppiumBy.XPATH, "//android.widget.TextView[@text='카메라']")
     APPS_CLOUD_CAM = (AppiumBy.XPATH, "//android.widget.TextView[@text='클라우드캠']")
-    APPS_APPIUM_SETTINGS = (AppiumBy.XPATH, "//android.widget.TextView[@text='Appium Settings']")
-    APPS_DEFAULT_APPS = (AppiumBy.XPATH, "//android.widget.TextView[@text='기본 앱']")
-    APPS_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='앱']")
-
-    APPS_ANDROID_AUTO = (AppiumBy.XPATH, "//android.widget.TextView[@text='Android Auto']")
-    APPS_CARPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='CarPlay']")
-    APPS_GLEO_AI_APP = (AppiumBy.XPATH, "//android.widget.TextView[@text='Gleo AI']")
-    APPS_GLEO_AI_DETAIL_BTN = (AppiumBy.XPATH, "//android.widget.TextView[@text='Gleo AI']/following-sibling::android.view.View//android.widget.Button")
+    APPS_DOWNLOAD_APP = (AppiumBy.XPATH, "//android.widget.TextView[@text='다운로드된 앱']")
+    APPS_LOCATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='위치 허용']")
+    APPS_ALARM = (AppiumBy.XPATH, "//android.widget.TextView[@text='알람 허용']")
+    APPS_MIC = (AppiumBy.XPATH, "//android.widget.TextView[@text='마이크 허용']")
+    APPS_TERMINATION = (AppiumBy.XPATH, "//android.widget.TextView[@text='강제 종료']")
+    APPS_TERMINATION_POPUP = (AppiumBy.XPATH, "//android.widget.TextView[@text='(s)내비게이션 앱을 강제 종료하시겠어요?']")
+    APPS_TERMINATION_POPUP_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소']")
+    
 
     # --- 보안(Security) -----------------------------------------------------------------------
-    SECURITY_RECORDING_OPTIONS = (AppiumBy.XPATH, "//android.widget.TextView[@text='녹화 옵션']")
+    SECURITY_RECORDING_OPTIONS = (AppiumBy.XPATH, "//android.widget.TextView[@text='녹화 옵션']") # 타이틀 텍스트 대용
+    SECURITY_RECORDING_OPTIONS_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 키로 잠금을 해제하면 주행 녹화가 시작되고, 차량을 잠그면 주차 녹화가 실행됩니다. 배터리 잔량이 20% 미만일 경우에는 모든 녹화가 중단됩니다.']")
     SECURITY_DRIVING_RECORDING = (AppiumBy.XPATH, "//android.widget.TextView[@text='주행 중']")
     SECURITY_PARKING_RECORDING = (AppiumBy.XPATH, "//android.widget.TextView[@text='주차 중']")
+    SECURITY_PARKING_RECORDING_TEXT = (AppiumBy.XPATH, "//android.widget.TextView[@text='이벤트 발생 전후 상황만 녹화하여 차량 배터리를 절약합니다.']")
+    SECURITY_PARKING_RECORDING_TEXT2 = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 배터리와 저장 공간이 충분할 때 사용할 것을 권장합니다.']")
     SECURITY_EVENT_RECORDING = (AppiumBy.XPATH, "//android.widget.TextView[@text='이벤트 녹화']")
     SECURITY_CONST_RECORDING = (AppiumBy.XPATH, "//android.widget.TextView[@text='상시 녹화']")
 
@@ -462,18 +557,20 @@ class VehicleControlPage(BasePage):
 
 
     # --- 하이패스 (HyundaiPass) -------------------------------------------------------------------
-    HIPASS_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='하이패스']")
-    HIPASS_PAYMENT_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='결제 정보']")
+    # 타이틀 텍스트 없음
+    # HIPASS_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='하이패스']")
+    HIPASS_PAYMENT_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='결제 정보']") # 타이틀 텍스트 대용
     HIPASS_BALANCE = (AppiumBy.XPATH, "//android.widget.TextView[@text='잔액']")
     HIPASS_RECENT_HISTORY = (AppiumBy.XPATH, "//android.widget.TextView[@text='최근 결제 내역']")
     HIPASS_PAYMENT_DISPLAY = (AppiumBy.XPATH, "//android.widget.TextView[@text='결제 표시']")
 
     # --- 일반 설정 (General) -------------------------------------------------------------------
+    # 타이틀 텍스트 없음
     GENERAL_SAVE = (AppiumBy.XPATH, "//android.widget.TextView[@text='저장' or @text='Save']")
     GENERAL_CONFIRM = (AppiumBy.XPATH, "//android.widget.TextView[@text='확인' or @text='Confirm']")
     GENERAL_CANCEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='취소' or @text='Cancel']")
 
-    GENERAL_FONT_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='글꼴']")
+    GENERAL_FONT_SETTING = (AppiumBy.XPATH, "//android.widget.TextView[@text='글꼴']") # 타이틀 텍스트 대용
     GENERAL_FONT_DROPDOWN = (AppiumBy.XPATH, "//android.widget.TextView[@text='기본' or @text='현대' or @text='기아' or @text='제네시스']")
     GENERAL_FONT_SETTING_BASIC = (AppiumBy.XPATH, "//android.widget.TextView[@text='기본']")
     GENERAL_FONT_SETTING_HYUNDAI = (AppiumBy.XPATH, "//android.widget.TextView[@text='현대']")
@@ -521,8 +618,8 @@ class VehicleControlPage(BasePage):
     GENERAL_TIRE_PRESSURE_BAR = (AppiumBy.XPATH, "//android.widget.TextView[@text='bar']")
 
     # --- 차량 정보(Vehicle Info) ---
-    VI_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 정보']")
-    VI_CONNECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Connect']")
+    #VI_TITLE = (AppiumBy.XPATH, "//android.widget.TextView[@text='차량 정보']")
+    VI_CONNECT = (AppiumBy.XPATH, "//android.widget.TextView[@text='Connect']") # 타이틀 텍스트 대용
     VI_SOFTWARE_INFO = (AppiumBy.XPATH, "//android.widget.TextView[@text='소프트웨어 정보']")
     VI_AUTO_UPDATE = (AppiumBy.XPATH, "//android.widget.TextView[@text='업데이트 자동 다운로드']")
     VI_VIN = (AppiumBy.XPATH, "//android.widget.TextView[@text='차대 번호']")

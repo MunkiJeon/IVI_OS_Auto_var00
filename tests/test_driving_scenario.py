@@ -44,30 +44,25 @@ class TestDrivingScenario:
         
         # 가속 페달 모드 (Group Click 사용)
         # 가계산 규격: 가로 652, 세로 71, 간격 14
-        self.page.click_grouped_button("가속 모드", 0, 3, 652, 71, 14) # 부드럽게
-        time.sleep(1)
-        self.page.click_grouped_button("가속 모드", 1, 3, 652, 71, 14) # 표준
-        time.sleep(1)
-        self.page.click_grouped_button("가속 모드", 2, 3, 652, 71, 14) # 빠르게
-        time.sleep(1)
+        for i in range(3):
+            self.page.click_grouped_button("가속 모드", i, 3, 652, 71, 14)
+            time.sleep(1)
 
         # 눈/빗길 보조 모드 (좌표 Tap)
-        self.page.toggle_tap(self.toggles[0], x_offset=-60, y_offset=10)
-        time.sleep(1)
-        self.page.toggle_tap(self.toggles[0], x_offset=-60, y_offset=10)
-        time.sleep(1)
+        for i in range(2):
+            self.page.toggle_tap(self.toggles[0], x_offset=-60, y_offset=10)
+            time.sleep(1)
         
         # 조향 반응 (Relative Click 사용)
-        self.page.click_after_text("조향 반응", "표준")
-        time.sleep(1)
-        self.page.click_after_text("조향 반응", "가볍게")
-        time.sleep(1)
+        for i in range(2):
+            self.page.click_after_text("조향 반응", "표준" if i == 0 else "가볍게")
+            time.sleep(1)
 
         # ESC 토글
-        self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
-        time.sleep(1)
-        self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
-        time.sleep(1)
+        for i in range(2):
+            self.page.toggle_tap(self.toggles[1], x_offset=-60, y_offset=10)
+            time.sleep(1)
+
 
         self.page.popup_find_tap(self.page.DRIVING_ESC_POPUP_ON_BUTTON)
         time.sleep(1)
@@ -76,6 +71,7 @@ class TestDrivingScenario:
         self.page.popup_find_tap(self.page.DRIVING_ESC_POPUP_OFF_BUTTON)
         time.sleep(1)
 
+        self.page.scroll_content_down()
         # 크립 모드 / 원페달 모드
         if not self.page.scroll_and_find(self.page.DRIVING_ACCEL_PEDAL_MODE):
              pytest.fail("가속 페달 모드 메뉴를 찾을 수 없습니다.")
@@ -118,34 +114,26 @@ class TestDrivingScenario:
         if not self.page.scroll_and_find(self.page.DRIVING_FORWARD_COLLISION_WARNING):
              pytest.fail("전방 충돌 경고 메뉴를 찾을 수 없습니다.")
         
-        self.page.click_after_text("전방 충돌 경고", "늦게")
-        time.sleep(1)
-        self.page.click_after_text("전방 충돌 경고", "보통")
-        time.sleep(1)
-        self.page.click_after_text("전방 충돌 경고", "일찍")
+        for i in range(3):
+            self.page.click_after_text("전방 충돌 경고", "늦게" if i == 0 else "보통" if i == 1 else "일찍")
+            time.sleep(1)
         time.sleep(1)
         
         # 차선 이탈 경고 (Relative Click 사용)
         if not self.page.scroll_and_find(self.page.DRIVING_LANE_DEPARTURE_WARNING):
              pytest.fail("차선 이탈 경고 메뉴를 찾을 수 없습니다.")
         
-        self.page.click_after_text("차선 이탈 경고", "끄기")
-        time.sleep(1)
-        self.page.click_after_text("차선 이탈 경고", "경고만")
-        time.sleep(1)
-        self.page.click_after_text("차선 이탈 경고", "경고와 제어")
-        time.sleep(1)
+        for i in range(3):
+            self.page.click_after_text("차선 이탈 경고", "끄기" if i == 0 else "경고만" if i == 1 else "경고와 제어")
+            time.sleep(1)
 
         # 사각지대 충돌 경고 (Relative Click 사용)
         if not self.page.scroll_and_find(self.page.DRIVING_BLIND_SPOT_COLLISION_WARNING):
              pytest.fail("사각지대 충돌 경고 메뉴를 찾을 수 없습니다.")
         
-        self.page.click_after_text("사각지대 충돌 경고", "끄기")
-        time.sleep(1)
-        self.page.click_after_text("사각지대 충돌 경고", "경고만")
-        time.sleep(1)
-        self.page.click_after_text("사각지대 충돌 경고", "경고와 제어")
-        time.sleep(1)
+        for i in range(3):
+            self.page.click_after_text("사각지대 충돌 경고", "끄기" if i == 0 else "경고만" if i == 1 else "경고와 제어")
+            time.sleep(1)
 
         """
         [시나리오] 사각지대 화면(카메라) 토글 테스트
@@ -157,10 +145,9 @@ class TestDrivingScenario:
         if not self.page.scroll_and_find(self.page.DRIVING_BLIND_SPOT_CAMERA):
              pytest.fail("사각지대 카메라 버튼을 찾을 수 없습니다.")
         
-        self.page.toggle_tap(self.toggles[3], x_offset=-60, y_offset=10)
-        time.sleep(1)
-        self.page.toggle_tap(self.toggles[3], x_offset=-60, y_offset=10)
-        time.sleep(1)
+        for i in range(2):
+            self.page.toggle_tap(self.toggles[3], x_offset=-60, y_offset=10)
+            time.sleep(1)
 
     def test_driving_parking_brake(self, driver):
         """
