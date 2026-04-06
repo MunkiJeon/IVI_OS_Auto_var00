@@ -67,6 +67,32 @@ class VehicleControlPage(BasePage):
     QS_SIDE_MIRROR = (AppiumBy.XPATH, "//android.widget.TextView[@text='사이드 미러']")    
     QS_AUTO_LABEL = (AppiumBy.XPATH, "//android.widget.TextView[@text='자동']")
 
+    # --- 빠른 설정 자동차 그래픽 아이콘 (Car Graphic Icons) ---
+    QS_CAR_ICONS = {
+        "프렁크": (1447, 216),
+        "사이드 미러": (1369, 304),
+        "썬 블라인드": (1447, 360),
+        "내부 조명": (1447, 467),
+        "트렁크": (1447, 574)
+    }
+    
+    # --- 빠른 설정 제어 버튼 레인 (Control Rows) ---
+    # 전조등 (Headlights): 끄기, 자동, 아이콘1, 아이콘2, 아이콘3
+    QS_HEADLIGHTS = [
+        (1138, 543), (1274, 543), (1410, 543), (1546, 543), (1682, 543), (1790, 522), (1790, 522)
+    ]
+    
+    # 와이퍼 (Wipers): OFF, I, II, AUTO, Washer icon (Front-Row)
+    QS_WIPERS_FRONT = [
+        (1138, 778), (1293, 778), (1448, 778), (1603, 778), (1758, 778), (1138, 778), (1785, 750)
+    ]
+    
+    # 와이퍼 (Wipers): OFF, I, II, AUTO, Washer icon (Rear-Row)
+    # Rear row is assumed to be below Front row (~100px)
+    QS_WIPERS_REAR = [
+        (1138, 880), (1293, 880), (1448, 880), (1603, 880), (1758, 880), (1138, 880), (1785, 870)
+    ]
+
     # --- 라이트 (Lights) ------------------------------------------------------------------------
     LIGHTS_IconBtn = {
         "전조등 끄기":(0.583, 0.259),

@@ -1,15 +1,29 @@
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
-from config import DeviceConfig
+from config import DeviceConfig, AppConfig
+from utils.device_manager import DeviceManager
 
 class DriverFactory:
     @staticmethod
     def get_driver():
+        # Dynamically discover and connect to the device (USB -> LAN -> WLAN)
+        udid = DeviceManager.get_target_device()
+        
         options = UiAutomator2Options()
         options.platform_name = "Android"
         options.automation_name = "UiAutomator2"
-        options.udid = DeviceConfig.TCP_DEVICE_ID
+        options.udid = udid # Dynamic UDID from DeviceManager
         options.no_reset = True
+        
+        # 앱 패키지 및 액티비티 설정 (일부 시스템에서 계측 초기화에 필요)
+        options.app_package = AppConfig.VEHICLE_CONTROL['package']
+        options.app_activity = AppConfig.VEHICLE_CONTROL['activity']
+
+        
+        # 앱 패키지 및 액티비티 설정 (일부 시스템에서 계측 초기화에 필요)
+        options.app_package = AppConfig.VEHICLE_CONTROL['package']
+        options.app_activity = AppConfig.VEHICLE_CONTROL['activity']
+
         
         # =====================================================
         # IVI 시스템 연결 설정 (Appium Settings 앱 설치 우회)

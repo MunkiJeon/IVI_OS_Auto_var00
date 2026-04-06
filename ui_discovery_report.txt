@@ -1,0 +1,16 @@
+Tab: 빠른 설정
+
+Tab: 라이트
+
+Tab: AD
+
+Tab: 주행
+
+Tab: 잠금
+
+Tab: 시트
+
+Tab: 공조
+
+Tab: 충전
+

@@ -1,0 +1,2 @@
+Text:  | Desc:  | Class: android.view.View | Bounds: [1407,339][1485,395]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1407,747][1485,803]

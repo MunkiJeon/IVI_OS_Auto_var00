@@ -1,5 +1,7 @@
 import pytest
 import time
+import random
+from appium.webdriver.common.appiumby import AppiumBy
 from pages.vehicle_control_page import VehicleControlPage
 
 class TestQuickSettingsScenario:
@@ -8,113 +10,143 @@ class TestQuickSettingsScenario:
     def setup(self, driver):
         self.page = VehicleControlPage(driver)
         self.page.start()
-        time.sleep(3) # Wait for app load
+        time.sleep(2)
+        # Navigate to Quick Settings
+        self.page.click_sidebar_menu("빠른 설정")
+        time.sleep(2)
 
-    def test_quick_settings(self, driver):
+    def test_quick_settings_refactored(self, driver):
         """
-        Combined test for Quick Settings: Icons visibility and Actions (Click/Toggle).
-        Verifies all accessible elements in the Quick Settings panel.
+        Finalized Quick Settings Scenario: 10 steps + Popup handling.
         """
-        page = VehicleControlPage(driver)
-        
-        print("Starting Quick Settings Full Test...")
-        page.start()
-        time.sleep(3) # Wait for app load
-        
-        # 1. Navigate to Quick Settings
-        print("Navigating to Quick Settings...")
-        page.click(page.MENU_QUICK_SETTINGS)
+        page = self.page
+
+        print("\n[Step 0] 자동차 그래픽 아이콘 (Car Graphic Icons) Test")
+        # 0. 프렁크, 사이드 미러, 썬 블라인드, 내부 조명, 트렁크 순서로 탭
+        for name, (x, y) in page.QS_CAR_ICONS.items():
+            print(f"  - Tapping Car Icon: {name}")
+            page.tap(x, y)
+            time.sleep(1.5)
+            print(f"  - Tapping Car Icon: {name}")
+            page.tap(x, y)
+            time.sleep(1.5)
+
+        print("\n[Step 1] 모든 창문 (All Windows) Toggle Test")
+        # 1. "모든 창문" 탭 (닫힘 <-> 열림 확인). 닫힘으로 초기화.
+        self._toggle_and_verify(page, "모든 창문", ["닫힘", "열림"], "닫힘")
+
+        print("\n[Step 2] 창문 잠금 (Window Lock) Toggle Test")
+        # 2. "창문 잠금" 탭 (잠김 <-> 해제됨 확인). 해제됨으로 초기화.
+        self._toggle_and_verify(page, "창문 잠금", ["잠김", "해제됨"], "해제됨")
+
+        print("\n[Step 3] 도어 (Door) Toggle Test")
+        # 3. "도어" 탭 (잠김 <-> 해제됨 확인). 해제됨으로 초기화.
+        self._toggle_and_verify(page, "도어", ["잠김", "해제됨"], "해제됨")
+
+        print("\n[Step 4] 차일드락 (Child Lock) Popup Test")
+        # 4. "차일드락" 탭 하여 팝업 확인 - 모두, 좌측, 우측, 꺼짐 순서로 탭 후 차일드 락 버튼 텝
+        page.click_text("차일드락")
+        time.sleep(1.5)
+        for mode in ["모두", "좌측", "우측", "꺼짐"]:
+            print(f"  - Tapping Child Lock Mode: {mode}")
+            page.click_text(mode)
+            time.sleep(0.8)
+
+        page.tap(1880, 100)
+        time.sleep(1.5)
+
+        print("\n[Step 5] 글로브박스 & 충전구 Test")
+        # 5. "글로브 박스" 탭 후 "충전구" 탭 하여 "닫힘" 또는 "열림"으로 변경됨 확인
+        page.click_text("글로브박스")
+        time.sleep(1)
+        self._toggle_and_verify(page, "충전구", ["닫힘", "열림"])
+
+        print("\n[Step 6] 화면 (Display) Slider & Popup Test")
+        page.click_text("화면")
         time.sleep(2)
         
-        # 2. Define all items to test
-        # Format: (Locator, Name, IsAction)
-        # IsAction=True implies we might expect a toggle or state change, currently just click verify.
+        # 6-1. Gauge Randomized Taps (2 times)
+        slider_bounds = [874, 841, 1528, 929]
+        for i in range(4):
+            rx = random.randint(slider_bounds[0], slider_bounds[2])
+            ry = random.randint(slider_bounds[1], slider_bounds[3])
+            print(f"  - Random Gauge Tap {i+1}: ({rx}, {ry})")
+            page.tap(rx, ry)
+            time.sleep(1.2)
         
-        items_to_test = [
-            (page.QS_ALL_WINDOWS, "All Windows"),
-            (page.QS_WINDOW_LOCK, "Window Lock"),
-            (page.QS_TRUNK, "Trunk"),
-            (page.QS_CHILD_LOCK, "Child Lock"),
-            (page.QS_DOOR_LOCK, "Door Lock"),
-            (page.QS_SUNBLIND, "Sunblind"),
-            (page.QS_GLOVE_BOX, "Glove Box"),
-            (page.QS_STEERING_WHEEL, "Steering Wheel"),
-            (page.QS_SIDE_MIRROR, "Side Mirror"),
-        ]
-        
-        # 3. Iterate and Test
-        SCREEN_WIDTH = 1920
-        SCREEN_HEIGHT = 1080
+        page.tap(1880, 100)
+        time.sleep(1.5)
 
-        page.random_area_interaction(1040, 370, 1340, 370, interaction_type='drag')
+        print("\n[Step 7] 사이드 미러 (Side Mirror) Popup Test")
+        # 7-1. "사이드 미러" 탭 -> 팝업 확인 -> 왼쪽/오른쪽/토글/X
+        page.click_text("사이드 미러")
+        time.sleep(2)
+        page.click_text("오른쪽")
+        time.sleep(1.2)
+        page.click_text("왼쪽")
+        time.sleep(1.2)
+        # Toggles
+        page.tap(1020, 705)
         time.sleep(1)
-        page.random_area_interaction(1040, 370, 1340, 370, interaction_type='drag')
+        page.tap(1020, 769)
         time.sleep(1)
+        # Close (X)
+        page.tap(1523, 142)
+        time.sleep(1.5)
+        # Restore/Save
+        for action in ["복원", "저장"]:
+            page.click_text("사이드 미러")
+            time.sleep(1.5)
+            print(f"  - Clicking {action}")
+            page.click_text(action)
+            time.sleep(1.5)
 
-        def get_coords(ratio_x, ratio_y) :
-            return (int(SCREEN_WIDTH * ratio_x), int(SCREEN_HEIGHT * ratio_y))
+        print("\n[Step 8] 운전대 (Steering Wheel) Popup Test")
+        page.click_text("운전대")
+        time.sleep(2)
+        # Close (X)
+        page.tap(1523, 260)
+        time.sleep(1.5)
+        # Restore/Save
+        for action in ["복원", "저장"]:
+            page.click_text("운전대")
+            time.sleep(1.5)
+            print(f"  - Clicking {action}")
+            page.click_text(action)
+            time.sleep(1.5)
 
-        # 4. IconBtn Test
-        for name, (rx, ry) in page.QS_IconBtn.items():
-            x, y = get_coords(rx, ry)
-            print(f"Testing {name} at ({x}, {y})...")
-            page.tap_coordinates(x, y)
+        page.tap(200, 500)
+        time.sleep(1.5)
+
+        print("\n[Step 9] 전조등 (Headlights) Row Test")
+        page.click_text("전조등")
+        time.sleep(1.5)
+        for i, coord in enumerate(page.QS_HEADLIGHTS):
+            print(f"  - Tapping Headlight Button {i+1}")
+            page.tap(*coord)
+            time.sleep(1.2)
+
+        print("\n[Step 10] 와이퍼 (Wipers) Row Test")
+        page.click_text("와이퍼")
+        time.sleep(1.5)
+        for row, coords in [("Front", page.QS_WIPERS_FRONT), ("Rear", page.QS_WIPERS_REAR)]:
+            print(f"  - Tapping {row} Wiper Row")
+            for i, coord in enumerate(coords):
+                page.tap(*coord)
+                time.sleep(1.2)
+
+        print("\nQuick Settings Refactored Test Completed Successfully.")
+
+    def _toggle_and_verify(self, page, label, states, reset_to=None):
+        print(f"  - Testing: {label}")
+        current = None
+        for s in states:
+            if page.is_displayed((AppiumBy.XPATH, f"//android.widget.TextView[@text='{s}']")):
+                current = s
+                break
+        print(f"    Current state: {current}")
+        page.click_text(label)
+        time.sleep(1.5)
+        if reset_to:
+            page.click_text(label) # Toggle back to initial
             time.sleep(1)
-            if (name == "전방 와이퍼 워셔액" or name == "후방 와이퍼 워셔액" or name == "라이트 자동 전조등" or name == "사이드 미러 개폐" or name == "충전 포트"):
-                page.tap_coordinates(x, y)
-                time.sleep(1)
-
-        for locator, name in items_to_test:
-            try:
-                print(f"Testing {name}...")
-                if (name == "Steering Wheel"):
-                    page.click(page.QS_STEERING_WHEEL)
-                    time.sleep(1)
-                    page.click(page.QS_STEERING_WHEEL_SAVE)
-                    time.sleep(1)
-                    page.click(page.QS_STEERING_WHEEL)
-                    time.sleep(1)
-                    page.click(page.QS_STEERING_WHEEL_RESTORE)
-                    time.sleep(1)
-                else:
-                    page.click(locator)
-                    time.sleep(1)
-                    page.click(locator)
-                    time.sleep(1)
-                    
-            except Exception as e:
-                pytest.fail(f"Exception during testing {name}: {e}")
-
-        # 4. Special Check for Red Box Items (Rows)
-        # Sunblind, Lights, Wipers (Front/Rear)
-        print("\n[Step] Verifying Control Rows (Sunblind, Lights, Wipers)...")
-
-        # 4.2 Verify Rows by 'Auto' buttons
-        # Logic: Get all 'Auto' buttons, sort by Y, and map to expected rows.
-        # Expected Order (Top to Bottom): Sunblind -> Lights -> Front Wiper -> Rear Wiper
-        try:
-            auto_btns = page.driver.find_elements(*page.QS_AUTO_LABEL)
-            # Filter for visible ones in the right panel (x > 800 approx) if needed, 
-            # but Quick Settings usually is the main view.
-            
-            # Sort by Y coordinate
-            sorted_autos = sorted(auto_btns, key=lambda el: el.location['y'])
-            
-            expected_rows = ["Sunblind (Slider)", "Lights (Headlights)", "Front Wiper", "Rear Wiper"]
-            
-            print(f"Found {len(sorted_autos)} 'Auto' buttons.")
-            
-            if len(sorted_autos) >= 4:
-                for i, row_name in enumerate(expected_rows):
-                    if i < len(sorted_autos):
-                        y_loc = sorted_autos[i].location['y']
-                        print(f"Verified Row: {row_name} - 'Auto' Button found at Y={y_loc}")
-            else:
-                print(f"Warning: Found fewer 'Auto' buttons than expected ({len(sorted_autos)} < 4).")
-                for i, btn in enumerate(sorted_autos):
-                    print(f"  - Auto Button {i+1} at Y={btn.location['y']}")
-
-        except Exception as e:
-            print(f"Error checking Auto buttons: {e}")
-
-        print("Quick Settings Full Test Completed")

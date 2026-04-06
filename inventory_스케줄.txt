@@ -1,0 +1,5 @@
+충전 [1050,135][1842,191] (clickable:False)
+충전 스케줄이 없습니다. [1332,282][1561,311] (clickable:False)
+추가 [1428,355][1464,380] (clickable:False)
+Precondition [1050,543][1842,599] (clickable:False)
+No precondition schedules. [1296,690][1596,719] (clickable:False)

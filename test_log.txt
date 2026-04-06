@@ -1,0 +1,6 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\USER\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\USER\Desktop\Python_mk07\IVI_OS_Auto_var00
+collecting ... collected 1 item
+

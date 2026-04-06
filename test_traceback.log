@@ -1,0 +1,111 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\USER\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\USER\Desktop\Python_mk07\IVI_OS_Auto_var00
+collecting ... collected 1 item
+
+tests/test_quick_settings_scenario.py::TestQuickSettingsScenario::test_quick_settings_refactored [DeviceManager] Found USB device with server: a8d4f4f2453
+
+[Sidebar] '빠른 설정' 메뉴 탐색 및 클릭 시도...
+[Sidebar] '빠른 설정' 발견. 클릭합니다.
+
+[Step 1] 모든 창문 (All Windows) Toggle Test
+  - Testing: 모든 창문
+    Current state: 닫힘
+[Text Click] '모든 창문' 탐색 및 클릭 시도 (exact=True, scroll=True)...
+요소 탐색 시작: ('xpath', "//*[@text='모든 창문']")
+FAILED
+
+================================== FAILURES ===================================
+__________ TestQuickSettingsScenario.test_quick_settings_refactored ___________
+
+self = <test_quick_settings_scenario.TestQuickSettingsScenario object at 0x0000023F8AF6D4C0>
+driver = <appium.webdriver.webdriver.WebDriver (session="646f31fd-cd71-41a4-a54e-917e151995cc")>
+
+    def test_quick_settings_refactored(self, driver):
+        """
+        Refactored Quick Settings Scenario based on 6 specific steps.
+        """
+        page = self.page
+        print("\n[Step 1] 모든 창문 (All Windows) Toggle Test")
+        # 1. "모든 창문" 탭 (닫힘 <-> 열림 확인). 닫힘으로 초기화.
+>       self._toggle_and_verify(page, "모든 창문", ["닫힘", "열림"], "닫힘")
+
+tests\test_quick_settings_scenario.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_quick_settings_scenario.TestQuickSettingsScenario object at 0x0000023F8AF6D4C0>
+page = <pages.vehicle_control_page.VehicleControlPage object at 0x0000023F8B06DD60>
+label = '모든 창문', states = ['닫힘', '열림'], reset_to = '닫힘'
+
+    def _toggle_and_verify(self, page, label, states, reset_to=None):
+        print(f"  - Testing: {label}")
+        # Get current state (look for one of the states on screen)
+        current = None
+        for s in states:
+            if page.is_displayed((AppiumBy.XPATH, f"//android.widget.TextView[@text='{s}']")):
+                current = s
+                break
+    
+        print(f"    Current state: {current}")
+>       page.click_text(label)
+
+tests\test_quick_settings_scenario.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pages.vehicle_control_page.VehicleControlPage object at 0x0000023F8B06DD60>
+text = '모든 창문', exact = True, scroll = True, timeout = 10
+
+    def click_text(self, text, exact=True, scroll=True, timeout=10):
+        """
+        텍스트를 기반으로 요소를 찾아 클릭합니다.
+        exact=True: 전체 일치, exact=False: 부분 일치
+        scroll=True: 요소를 찾을 때까지 스크롤 시도
+        """
+        print(f"[Text Click] '{text}' 탐색 및 클릭 시도 (exact={exact}, scroll={scroll})...")
+    
+        if exact:
+            xpath = f"//*[@text='{text}']"
+        else:
+            xpath = f"//*[contains(@text, '{text}')]"
+    
+        locator = (AppiumBy.XPATH, xpath)
+    
+        if scroll:
+>           if self.scroll_and_find(locator):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pages\base_page.py:485: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pages.vehicle_control_page.VehicleControlPage object at 0x0000023F8B06DD60>
+locator = ('xpath', "//*[@text='모든 창문']"), max_scrolls = 3
+
+    def scroll_and_find(self, locator, max_scrolls=3):
+        """
+        요소가 보일 때까지 우측 콘텐츠 영역을 스크롤합니다.
+        이미 보이면 즉시 반환합니다.
+        """
+        # 시작 전 최상단으로 이동 (옵션 - 여기서는 일단 현재 위치에서 시작)
+        print(f"요소 탐색 시작: {locator}")
+    
+        for i in range(max_scrolls + 1):
+            if self.is_displayed(locator):
+>               print(f"{self.title_split(locator)} 발견 ({i}회 스크롤)")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pages\base_page.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <pages.vehicle_control_page.VehicleControlPage object at 0x0000023F8B06DD60>
+locator = ('xpath', "//*[@text='모든 창문']")
+
+    def title_split(self, locator):
+>       return locator[1].split("//android.widget.TextView[@text='")[1].rsplit("']")[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+pages\base_page.py:542: IndexError
+=========================== short test summary info ===========================
+FAILED tests/test_quick_settings_scenario.py::TestQuickSettingsScenario::test_quick_settings_refactored
+============================= 1 failed in 14.85s ==============================

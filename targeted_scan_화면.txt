@@ -1,0 +1,8 @@
+Text:  | Desc:  | Class: android.view.View | Bounds: [1355,261][1625,514]
+Text:  | Desc:  | Class: android.widget.RadioButton | Bounds: [1362,436][1433,507]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1050,822][1138,910]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1754,822][1842,910]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1050,354][1138,442]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1754,354][1842,442]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1050,495][1138,574]
+Text:  | Desc:  | Class: android.view.View | Bounds: [1050,813][1279,901]

@@ -1,2 +1,4 @@
 Appium-Python-Client
 pytest
+opencv-python
+numpy
