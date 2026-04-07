@@ -1,0 +1,5 @@
+android.widget.Button |  | [987,724][1058,785]
+android.widget.TextView | 취소 | [1102,864][1144,893]
+android.widget.Button |  | [987,834][1259,922]
+android.widget.TextView | 저장 | [1395,864][1437,893]
+android.widget.Button |  | [1280,834][1552,922]

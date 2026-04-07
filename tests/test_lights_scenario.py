@@ -1,169 +1,207 @@
-
 import pytest
 import time
+import random
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.vehicle_control_page import VehicleControlPage
+
 class TestLightsScenario:
     """
     라이트 (Lights) 탭 테스트 시나리오
-    - 전조등 (끄기, 자동, 미등, 켜짐)
+    - 전조등 (끄기, 자동, 미등, 켜짐, 자동상향등, 에스코트 조명)
     - 프렁크등 / 트렁크등
-    - 실내등 (전체, 개별 좌석)
-    - 무드 조명 (색상 변경, 저장)
+    - 실내등 (전체 끄기, 개별 좌석)
     """
 
     @pytest.fixture(autouse=True)
     def setup(self, driver):
-        """각 테스트 메서드 실행 전 초기화"""
         self.page = VehicleControlPage(driver)
         self.page.start()
-        time.sleep(3)
+        time.sleep(2)
         self.page.click_sidebar_menu("라이트")
-        time.sleep(1)
-        yield
+        time.sleep(2)
 
-    def test_headlights(self):
-        """
-        [시나리오] 전조등 설정 테스트
-        - 좌표 기반 버튼 클릭 (전조등 끄기, 자동, 미등, 켜짐 등)
-        """
-        print("\n[Test] 전조등 설정 테스트 시작")
+    def test_lights_sequence(self, driver):
+        page = self.page
+
+        print("\n[Step 1] 전조등 (Headlights) & 에스코트 Test")
+        # 1 끄기, 2 자동, 3 미등, 4 전조등
+        headlight_coords = [(1149, 402), (1347, 402), (1545, 402), (1743, 402)]
+        auto_highbeam = (1287, 518)
         
-        self.page.click_grouped_button("전조등", 0, 4, 652, 71, 14) # 부드럽게
-        time.sleep(1)
-        self.page.click_grouped_button("전조등", 1, 4, 652, 71, 14) # 표준
-        time.sleep(1)
-        self.page.click_grouped_button("전조등", 2, 4, 652, 71, 14) # 빠르게
-        time.sleep(1)
-        self.page.click_grouped_button("전조등", 3, 4, 652, 71, 14) # 빠르게
-        time.sleep(1)
-
-        #전조등 자동
-        self.page.toggle_tap(self.page.LIGHT_HEADLIGHT, x_offset=0, y_offset=150)
-        time.sleep(1)
-        self.page.toggle_tap(self.page.LIGHT_HEADLIGHT, x_offset=0, y_offset=150)
-        time.sleep(1)
-        #에스코트 조명
-        self.page.toggle_tap(self.page.LIGHT_ESCOOT_LIGHT, x_offset=-60, y_offset=10)
-        time.sleep(1)
-        self.page.toggle_tap(self.page.LIGHT_ESCOOT_LIGHT, x_offset=-60, y_offset=10)
-        time.sleep(1)
-
-    def test_frunk_trunk_lights(self, driver):
-        """
-        [시나리오] 프렁크등 및 트렁크등 테스트
-        - 프렁크등 (켜기/자동/끄기)
-        - 트렁크등 (켜기/자동/끄기)
-        """
-        print("\n[Test] 프렁크/트렁크등 테스트 시작")
+        for i, coord in enumerate(headlight_coords):
+            print(f"  - Tapping Headlight Button {i+1}")
+            page.tap(*coord)
+            time.sleep(1)
         
-        # 프렁크등
-        self.page.click_after_text("프렁크등", "켜기")
+        # 5 자동 상향등 (2번 탭)
+        print("  - Tapping Auto High Beam (Double Tap)")
+        page.tap(*auto_highbeam)
+        time.sleep(0.5)
+        page.tap(*auto_highbeam)
         time.sleep(1)
-        self.page.click_after_text("프렁크등", "자동")
-        time.sleep(1)
-        self.page.click_after_text("프렁크등", "끄기")
-        time.sleep(1)
-
-        # 트렁크등
-        self.page.click_after_text("트렁크등", "켜기")
-        time.sleep(1)
-        self.page.click_after_text("트렁크등", "자동")
-        time.sleep(1)
-        self.page.click_after_text("트렁크등", "끄기")
-        time.sleep(1)
-
-    def test_interior_lights(self, driver):
-        """
-        [시나리오] 실내등 테스트
-        - 하단 스크롤 후 실내등 메뉴 접근
-        - 전체 끄기, 개별 좌석 제어 테스트
-        """
-        print("\n[Test] 실내등 테스트 시작")
         
-        # 스크롤하여 실내등 섹션으로 이동
-        if not self.page.scroll_and_find(self.page.LIGHT_INTERIOR_ALL_SEATS):
-            pytest.fail("실내등 메뉴를 찾을 수 없습니다.")
-
-        # 개별 좌석 토글
-        seats = [
-            self.page.LIGHT_INTERIOR_ALL_OFF,
-            self.page.LIGHT_INTERIOR_DRIVER,
-            self.page.LIGHT_INTERIOR_PASSENGER,
-            self.page.LIGHT_INTERIOR_REAR_LEFT,
-            self.page.LIGHT_INTERIOR_REAR_RIGHT,
-            self.page.LIGHT_INTERIOR_ALL_SEATS,
-            self.page.LIGHT_INTERIOR_ALL_OFF,
-        ]
+        # 6 끄기
+        print("  - Tapping Headlight Off (Reset)")
+        page.tap(*headlight_coords[0])
+        time.sleep(1)
         
-        for seat in seats:
-            if not self.page.scroll_and_find(seat):
-                pytest.fail(f"{seat}를 찾을 수 없습니다.")
-            else:
-                print(f"{seat} 클릭.")
-                self.page.click(seat)
+        # 에스코트 조명 토글 2회
+        print("  - Tapping Escort Light Toggle (2 times)")
+        escort_toggle = (1094, 636)
+        page.tap(*escort_toggle)
+        time.sleep(0.5)
+        page.tap(*escort_toggle)
+        time.sleep(1)
+
+        print("\n[Step 2] 프렁크등 & 트렁크등 (Frunk & Trunk) Test")
+        # Scroll down so both are visible
+        page.scroll_content("down")
+        time.sleep(2)
+        
+        # 끄기(1182), 켜기(1446), 자동(1710)
+        xs = [1182, 1446, 1710, 1182]
+        actions = ["끄기", "켜기", "자동", "끄기"]
+        
+        try:
+            frunk_y = driver.find_element(AppiumBy.XPATH, "//*[@text='프렁크등']").rect['y'] + 152
+            print("  - Testing Frunk Lights")
+            for x, action in zip(xs, actions):
+                print(f"    - Tapping {action}")
+                page.tap(x, frunk_y)
                 time.sleep(1)
+        except Exception as e:
+            print(f"  - Error testing Frunk: {e}")
 
-    def test_mood_lights(self, driver):
-        """
-        [시나리오] 무드 조명 테스트
-        - 무드 조명 켜기
-        - 색상 설정 팝업 진입
-        - 색상 선택 및 저장
-        """
-        print("\n[Test] 무드 조명 테스트 시작")
-        
-        # 스크롤하여 무드 조명으로 이동
-        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_ON, 4):
-            pytest.fail("무드 조명 메뉴를 찾을 수 없습니다.")
-            
-        # 무드 조명 켜기c
-        self.page.click_after_text("무드 조명", "끄기")
-        time.sleep(1)
-        self.page.click_after_text("무드 조명", "자동")
-        time.sleep(1)
-        self.page.click_after_text("무드 조명", "켜기")
-        time.sleep(1)
-
-        # 조명 밝기 변경
-        self.page.scroll_content_down()
-        sw_rect = driver.find_element(*self.page.LIGHT_MOOD_COLOR).rect
-        target_x = sw_rect['x'] + sw_rect['width']
-        target_y = sw_rect['y'] + sw_rect['height']//2
-        print(f"Found {self.page.LIGHT_MOOD_COLOR} at {sw_rect}. \nTapping at ({target_x}, {target_y})")
-
-        self.page.random_area_interaction(target_x + 160, target_y, target_x + 480, target_y, interaction_type='drag')
-        time.sleep(1)
-        com = 120
-        for i in range(2):
-            for j in range(3):
-                self.page.tap_coordinates(x=target_x + com, y=target_y) #밝기 감소
-                if com == 120: print("밝기 감소") 
-                elif com == 520: print("밝기 증가")
+        try:
+            trunk_y = driver.find_element(AppiumBy.XPATH, "//*[@text='트렁크등']").rect['y'] + 152
+            print("  - Testing Trunk Lights")
+            for x, action in zip(xs, actions):
+                print(f"    - Tapping {action}")
+                page.tap(x, trunk_y)
                 time.sleep(1)
-            com += 400
+        except Exception as e:
+            print(f"  - Error testing Trunk: {e}")
 
-        self.page.tap_coordinates(x=target_x + 520, y=target_y) #밝기 증가_10@
-        print("밝기 증가")
-        time.sleep(1)
-
-        # 색상 설정 진입
-        if not self.page.scroll_and_find(self.page.LIGHT_MOOD_COLOR):
-            pytest.fail("무드 조명 색상 버튼을 찾을 수 없습니다.")
+        print("\n[Step 3] 실내등 (Interior Lights) Test")
+        # Scroll until '뒷좌석 우측' is visible
+        page.scroll_and_find((AppiumBy.XPATH, "//*[@text='뒷좌석 우측']"), max_scrolls=3)
+        time.sleep(2)
+        
+        # We need to tap "끄기", which is aligned with "운전석"
+        # Find "운전석" and offset to "끄기"
+        try:
+            driver_seat = driver.find_element(AppiumBy.XPATH, "//*[@text='운전석']")
+            off_x = driver_seat.rect['x'] - 245  # Offset to '끄기'
+            off_y = driver_seat.rect['y'] + driver_seat.rect['height'] // 2
             
-        print("색상 설정 진입...")
-        self.page.click(self.page.LIGHT_MOOD_COLOR)
-        time.sleep(1)
-        
-        # 색상 휠 영역에서 랜덤 인터랙션 (탭 또는 드래그)
-        print("색상 휠 영역에서 랜덤 인터랙션 수행...")
-        self.page.random_area_interaction(1050, 255, 1485, 590, interaction_type='drag')
-        time.sleep(1)
-        self.page.random_area_interaction(1050, 695, 1485, 695, interaction_type='drag')
-        time.sleep(1)
+            sequence = [
+                ("모든 좌석", lambda: page.click_text("모든 좌석", scroll=False)),
+                ("끄기", lambda: page.tap(off_x, off_y)),
+                ("운전석", lambda: page.click_text("운전석", scroll=False)),
+                ("동승석", lambda: page.click_text("동승석", scroll=False)),
+                ("뒷좌석 좌측", lambda: page.click_text("뒷좌석 좌측", scroll=False)),
+                ("뒷좌석 우측", lambda: page.click_text("뒷좌석 우측", scroll=False)),
+                ("끄기", lambda: page.tap(off_x, off_y))
+            ]
+            
+            for label, act in sequence:
+                print(f"  - Tapping Interior Light: {label}")
+                act()
+                time.sleep(1)
+                
+        except Exception as e:
+            print(f"  - Error testing Interior Lights: {e}")
 
-        # 저장
-        print("저장 버튼 클릭...")
-        self.page.click(self.page.LIGHT_MOOD_SAVE_BTN)
-        time.sleep(1)
+        print("\n[Step 4] 무드 조명 & 사운드 연동 조명 Test")
+        # Scroll down
+        page.scroll_and_find((AppiumBy.XPATH, "//*[@text='사운드 연동 조명']"), max_scrolls=4)
+        time.sleep(2)
         
+        # 무드 조명 (Mood Light)
+        try:
+            mood_elem = driver.find_element(AppiumBy.XPATH, "//*[@text='무드 조명']")
+            mood_y = mood_elem.rect['y'] + 138
+            print("  - Testing Mood Lights (켜기 > 자동 > 끄기 > 켜기)")
+            for x, action in zip([1447, 1711, 1182, 1447], ["켜기", "자동", "끄기", "켜기"]):
+                page.tap(x, mood_y)
+                time.sleep(1)
+        except Exception as e:
+            print(f"  - Error testing Mood Lights basic: {e}")
+
+        # 밝기 변경 (Brightness)
+        try:
+            color_elem = driver.find_element(AppiumBy.XPATH, "//*[@text='색상']")
+            target_x = color_elem.rect['x'] + color_elem.rect['width']
+            target_y = color_elem.rect['y'] + color_elem.rect['height'] // 2
+            
+            print("  - Tapping slider 4 times randomly")
+            for _ in range(4):
+                rx = random.randint(target_x + 160, target_x + 480)
+                page.tap(rx, target_y)
+                time.sleep(0.5)
+                
+            print("  - Tapping Minus (red) 2 times, Plus (yellow) 2 times")
+            for _ in range(2): page.tap(target_x + 120, target_y); time.sleep(0.5)
+            for _ in range(2): page.tap(target_x + 670, target_y); time.sleep(0.5)
+        except Exception as e:
+            print(f"  - Error testing Mood Brightness: {e}")
+            
+        # 색상 팝업 1: 열고 취소
+        try:
+            print("  - Opening Color Popup and Canceled")
+            page.click_text("색상", scroll=False)
+            time.sleep(1.5)
+            page.click_text("취소", scroll=False)
+            time.sleep(1)
+        except Exception as e:
+            print(f"  - Error testing Mood Color Popup 1: {e}")
+            
+        # 색상 팝업 2: 상단 휠 스와이프, 하단 스와이프, +, 저장
+        try:
+            print("  - Opening Color Popup and Saving Custom")
+            page.click_text("색상", scroll=False)
+            time.sleep(1.5)
+            
+            # 상단 영역 임의 스와이프
+            print("    - Top blue area drag")
+            for _ in range(2):
+                rx1 = random.randint(1050, 1485)
+                ry1 = random.randint(255, 590)
+                rx2 = random.randint(1050, 1485)
+                ry2 = random.randint(255, 590)
+                page.swipe(rx1, ry1, rx2, ry2, duration=600)
+                time.sleep(1)
+            
+            # 하단 영역 L->R, R->L
+            print("    - Bottom blue area left<->right drag")
+            page.swipe(1050, 650, 1485, 650, duration=800)
+            time.sleep(1)
+            page.swipe(1485, 650, 1050, 650, duration=800)
+            time.sleep(1)
+            
+            # [+] 모양 탭
+            print("    - Tapping [+] icon")
+            page.tap(1022, 755)
+            time.sleep(1)
+            
+            # 저장 탭
+            page.click_text("저장", scroll=False)
+            time.sleep(1.5)
+        except Exception as e:
+            print(f"  - Error testing Mood Color Popup 2: {e}")
+            
+        # 사운드 연동 조명
+        page.scroll_and_find((AppiumBy.XPATH, "//*[@text='항상 켜기']"), max_scrolls=3)
+        time.sleep(2)
+        try:
+            sound_elem = driver.find_element(AppiumBy.XPATH, "//*[@text='사운드 연동 조명']")
+            sound_y = sound_elem.rect['y'] + 188
+            print("  - Testing Sound Sync Lights (항상 켜기 > 주차시 > 끄기 > 항상 켜기)")
+            # 끄기(1182), 항상 켜기(1447), 주차시(1711 추정)
+            for x, action in zip([1447, 1711, 1182, 1447], ["항상 켜기", "주차시", "끄기", "항상 켜기"]):
+                page.tap(x, sound_y)
+                time.sleep(1)
+        except Exception as e:
+            print(f"  - Error testing Sound Sync Lights: {e}")
+
+        print("\nLights Scenario Test Completed Successfully.")

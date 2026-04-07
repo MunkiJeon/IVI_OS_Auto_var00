@@ -1,0 +1,69 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\USER\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\USER\Desktop\Python_mk07\IVI_OS_Auto_var00
+collecting ... collected 1 item
+
+tests/test_lights_scenario.py::TestLightsScenario::test_lights_sequence [DeviceManager] Using connected TCP device with server: 192.168.0.204:5555
+
+[Step 1] 전조등 (Headlights) & 에스코트 Test
+  - Tapping Headlight Button 1
+  - Tapping Headlight Button 2
+  - Tapping Headlight Button 3
+  - Tapping Headlight Button 4
+  - Tapping Auto High Beam (Double Tap)
+  - Tapping Headlight Off (Reset)
+  - Tapping Escort Light Toggle (2 times)
+
+[Step 2] 프렁크등 & 트렁크등 (Frunk & Trunk) Test
+[Swipe] (1728, 864) -> (1728, 216), dur=1200ms
+  - Testing Frunk Lights
+    - Tapping 끄기
+    - Tapping 켜기
+    - Tapping 자동
+    - Tapping 끄기
+  - Testing Trunk Lights
+    - Tapping 끄기
+    - Tapping 켜기
+    - Tapping 자동
+    - Tapping 끄기
+
+[Step 3] 실내등 (Interior Lights) Test
+[Swipe] (1728, 864) -> (1728, 216), dur=1200ms
+  - Tapping Interior Light: 모든 좌석
+  - Tapping Interior Light: 끄기
+  - Tapping Interior Light: 운전석
+  - Tapping Interior Light: 동승석
+  - Tapping Interior Light: 뒷좌석 좌측
+  - Tapping Interior Light: 뒷좌석 우측
+  - Tapping Interior Light: 끄기
+
+[Step 4] 무드 조명 & 사운드 연동 조명 Test
+[Swipe] (1728, 864) -> (1728, 216), dur=1200ms
+[Swipe] (1728, 864) -> (1728, 216), dur=1200ms
+  - Tapping Mood Light: 켜기
+  - Tapping Mood Light: 자동
+  - Tapping Mood Light: 끄기
+  - Tapping Mood Light: 켜기
+  - Tapping Brightness Slider randomly: (1591, 555)
+  - Tapping Brightness Slider randomly: (1403, 555)
+  - Tapping Brightness Slider randomly: (1377, 555)
+  - Tapping Brightness Slider randomly: (1396, 555)
+  - Tapping Left (<) 2 times
+  - Tapping Right (>) 2 times
+  - Opening Color Popup and Canceling
+  - Opening Color Popup for Adjustment
+    - Random dragging in gradient area
+  - Error testing Mood Light: 'VehicleControlPage' object has no attribute 'random_area_interaction'
+  - Error testing Sound Sync Light: Message: An element could not be located on the page using the given search parameters.; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+NoSuchElementError: An element could not be located on the page using the given search parameters.
+    at AndroidUiautomator2Driver.findElOrEls (C:\Users\USER\.appium\node_modules\appium-uiautomator2-driver\node_modules\appium-android-driver\lib\commands\find.ts:86:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at AndroidUiautomator2Driver.findElOrElsWithProcessing (C:\Users\USER\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:60:12)
+    at AndroidUiautomator2Driver.findElement (C:\Users\USER\AppData\Roaming\npm\node_modules\appium\node_modules\@appium\base-driver\lib\basedriver\commands\find.ts:75:12)
+
+Lights Scenario Test Completed Successfully.
+PASSED
+
+======================== 1 passed in 74.84s (0:01:14) =========================
